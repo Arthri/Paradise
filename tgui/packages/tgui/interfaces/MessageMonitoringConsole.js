@@ -19,6 +19,35 @@ export const MessageMonitoringConsole = (props, context) => {
   );
 }
 
+const ServerConfiguration = (props, context) => {
+  const { act, data } = useBackend(context);
+  const {
+    servers,
+  } = data;
+  return (
+    <LabeledList>
+      <LabeledList.Item label="Server">
+        <Dropdown
+          width="100%"
+          options={servers.map(s => `Server ${s}`)}
+          onSelected={(selected) =>
+            act('set_server', {
+              newValue: selected,
+            })
+          }
+        />
+      </LabeledList.Item>
+      <LabeledList.Item label="Decryption Key">
+        <Button
+          icon="key"
+          content="Change"
+          onClick={() => act('change_decryption_key')}
+        />
+      </LabeledList.Item>
+    </LabeledList>
+  );
+}
+
 // Must be defined after all tabs are defined
 const tabs = [
   { name: 'Message Logs', icon: 'comments', },
