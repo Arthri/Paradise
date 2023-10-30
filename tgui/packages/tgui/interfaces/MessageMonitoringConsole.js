@@ -1,6 +1,8 @@
+import { Component } from 'inferno'
 import { useBackend } from '../backend'
-import { Button, Dropdown, LabeledList, Section, Tabs } from '../components'
+import { Button, Dropdown, Flex, Input, LabeledList, Section, Table, Tabs } from '../components'
 import { Window } from '../layouts'
+import { createSearch } from 'common/string'
 
 export const MessageMonitoringConsole = (props, context) => {
   const { act, data } = useBackend(context);
@@ -17,6 +19,79 @@ export const MessageMonitoringConsole = (props, context) => {
       </Window.Content>
     </Window>
   );
+}
+
+class RequestLogs extends Component {
+  constructor() {
+    super();
+    this.state = {
+      searchText: '',
+    };
+  }
+
+  render() {
+    const { act, data } = useBackend(this.context);
+    const {
+      requests,
+    } = data;
+    const {
+      searchText,
+    } = this.state;
+    const dataColumns = [
+      { id: "sendingDepartment", name: 'Origin Department', },
+      { id: "receivingDepartment", name: 'Target Department', },
+      { id: "message", name: 'Message', },
+      { id: "stamp", name: 'Stamp', },
+      { id: "idAuth", name: 'Authorized By', },
+      { id: "priority", name: 'Priority', },
+    ];
+    return (
+      <Flex direction="column" height="100%">
+        <Flex>
+          <Input
+            placeholder="Search by any column"
+            flexGrow={1}
+            style={{ 'margin-right': '0.25rem' }}
+            onInput={(e, value) => this.setState({ searchText: value })}
+          />
+          <Button.Confirm
+            icon="trash"
+            content="Delete Records"
+            tooltipPosition="left"
+            onClick={() => act('clear_request_logs')}
+          />
+        </Flex>
+        <Section flexGrow={1} mt="0.5rem">
+          <Table.Sortable
+            columns={dataColumns}
+            data={requests}
+            datumCellProps={{
+              stamp: {
+                textAlign: "center",
+              },
+              idAuth: {
+                textAlign: "center",
+              },
+              priority: {
+                textAlign: "center",
+              },
+            }}
+            datumID={(datum) => datum.id}
+            filter={(data) =>
+              data.filter(createSearch(searchText,
+                (data) => dataColumns.map(c => `${c}:${data[c.id]}`).join('|')
+              ))
+            }
+            headerCellProps={{
+              all: {
+                textAlign: 'center',
+              },
+            }}
+          />
+        </Section>
+      </Flex>
+    );
+  }
 }
 
 const ServerConfiguration = (props, context) => {
