@@ -1,5 +1,3 @@
-import { flow } from 'common/fp';
-import { sortBy } from 'common/collections';
 import { useBackend, useSharedState } from '../backend';
 import {
   Box,
@@ -93,7 +91,9 @@ export const Autolathe = (props, context) => {
   if (searchText) {
     recipesToShow = recipesToShow.filter(testSearch);
   }
-  recipesToShow = sortBy((recipe) => recipe.name.toLowerCase())(recipesToShow);
+  recipesToShow = recipesToShow.sort(({ name: a }, { name: b }) =>
+    a.toLowerCase().localeCompare(b.toLowerCase())
+  );
 
   let rText = 'Build';
   if (searchText) {

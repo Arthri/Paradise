@@ -1,4 +1,3 @@
-import { sortBy } from 'common/collections';
 import { createSearch } from 'common/string';
 import { useBackend, useLocalState } from '../backend';
 import {
@@ -106,7 +105,9 @@ export const CrewMonitor = (props, context) => {
 
 const CrewMonitorDataView = (_properties, context) => {
   const { act, data } = useBackend(context);
-  const crew = sortBy((cm) => cm.name)(data.crewmembers || []);
+  const crew =
+    data.crewmembers?.sort(({ name: a }, { name: b }) => a.localeCompare(b)) ??
+    [];
   const [search, setSearch] = useLocalState(context, 'search', '');
   const searcher = createSearch(search, (cm) => {
     return cm.name + '|' + cm.assignment + '|' + cm.area;

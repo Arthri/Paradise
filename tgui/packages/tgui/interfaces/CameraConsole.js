@@ -1,4 +1,3 @@
-import { sortBy } from 'common/collections';
 import { classes } from 'common/react';
 import { createSearch } from 'common/string';
 import { Fragment } from 'inferno';
@@ -35,7 +34,7 @@ const selectCameras = (cameras, searchText = '') => {
     result = result.filter(testSearch);
   }
   // Slightly expensive, but way better than sorting in BYOND
-  return sortBy((camera) => camera.name)(cameras);
+  return cameras.sort(({ name: a }, { name: b }) => a.localeCompare(b));
 };
 
 export const CameraConsole = (props, context) => {

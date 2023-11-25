@@ -1,4 +1,3 @@
-import { sortBy } from 'common/collections';
 import { Fragment } from 'inferno';
 import { useLocalState } from '../../backend';
 import {
@@ -48,9 +47,10 @@ export const AccessList = (props, context) => {
   const selectedAccess = accesses.find(
     (access) => access.name === selectedAccessName
   );
-  const selectedAccessEntries = sortBy((entry) => entry.desc)(
-    selectedAccess?.accesses || []
-  );
+  const selectedAccessEntries =
+    selectedAccess?.accesses?.sort(({ desc: a }, { desc: b }) =>
+      a.localeCompare(b)
+    ) ?? [];
 
   const checkAccessIcon = (accesses) => {
     let oneAccess = false;

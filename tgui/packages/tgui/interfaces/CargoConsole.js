@@ -1,4 +1,3 @@
-import { sortBy } from 'common/collections';
 import { useBackend, useSharedState, useLocalState } from '../backend';
 import {
   Button,
@@ -203,7 +202,9 @@ const CataloguePane = (_properties, context) => {
   if (searchText) {
     cratesToShow = cratesToShow.filter(packSearch);
   }
-  cratesToShow = sortBy((pack) => pack.name.toLowerCase())(cratesToShow);
+  cratesToShow = cratesToShow.sort(({ name: a }, { name: b }) =>
+    a.toLowerCase().localeCompare(b.toLowerCase())
+  );
 
   let titleText = 'Crate Catalogue';
   if (searchText) {

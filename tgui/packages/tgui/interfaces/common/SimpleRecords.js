@@ -1,7 +1,5 @@
 import { useBackend, useLocalState } from '../../backend';
 import { createSearch } from 'common/string';
-import { flow } from 'common/fp';
-import { sortBy } from 'common/collections';
 import { Box, Input, Button, Section, LabeledList } from '../../components';
 
 export const SimpleRecords = (props, context) => {
@@ -35,7 +33,7 @@ const SelectionView = (props, context) => {
       result = result.filter(MemberSearch);
     }
     // Slightly expensive, but way better than sorting in BYOND
-    return sortBy((member) => member.Name)(result);
+    return result.sort(({ Name: a }, { Name: b }) => a.localeCompare(b));
   };
 
   const formattedRecords = SelectMembers(recordsList, searchText);

@@ -1,4 +1,3 @@
-import { sortBy } from 'common/collections';
 import { createSearch, decodeHtmlEntities } from 'common/string';
 import { Fragment } from 'inferno';
 import { useBackend, useLocalState } from '../backend';
@@ -101,7 +100,7 @@ const ItemsPage = (_properties, context) => {
     if (searchText) {
       results = results.filter(EquipmentSearch); // Search for anything
     }
-    return sortBy((item) => item?.name)(results); // Sort by name
+    return results.sort(({ name: a }, { name: b }) => a.localeCompare(b)); // Sort by name
   };
   const handleSearch = (value) => {
     setSearchText(value);
@@ -395,7 +394,7 @@ const ExploitableInfoPage = (_properties, context) => {
       results = results.filter(MemberSearch);
     }
     // Slightly expensive, but way better than sorting in BYOND
-    return sortBy((member) => member.name)(people);
+    return people.sort(({ name: a }, { name: b }) => a.localeCompare(b));
   };
 
   const crew = SelectMembers(exploitable, searchText);

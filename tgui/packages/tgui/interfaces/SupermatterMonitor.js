@@ -1,7 +1,4 @@
-import { sortBy } from 'common/collections';
-import { flow } from 'common/fp';
 import { toFixed } from 'common/math';
-import { Fragment } from 'inferno';
 import { useBackend } from '../backend';
 import {
   Section,
@@ -85,10 +82,10 @@ const SupermatterMonitorDataView = (props, context) => {
   const { act, data } = useBackend(context);
   const { active, SM_integrity, SM_power, SM_ambienttemp, SM_ambientpressure } =
     data;
-  const gases = flow([
-    (gases) => gases.filter((gas) => gas.amount >= 0.01),
-    sortBy((gas) => -gas.amount),
-  ])(data.gases || []);
+  const gases =
+    data.gases
+      ?.filter((gas) => gas.amount >= 0.01)
+      ?.sort(({ amount: a }, { amount: b }) => b - a) ?? [];
   const gasMaxAmount = Math.max(1, ...gases.map((gas) => gas.amount));
   return (
     <Window>

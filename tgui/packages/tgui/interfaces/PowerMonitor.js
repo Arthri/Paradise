@@ -1,5 +1,3 @@
-import { sortBy } from 'common/collections';
-import { flow } from 'common/fp';
 import { toFixed } from 'common/math';
 import { pureComponentHooks } from 'common/react';
 import { decodeHtmlEntities } from 'common/string';
@@ -90,18 +88,20 @@ const DataView = (props, context) => {
     const supplyData = history.supply.map((value, i) => [i, value]);
     const demandData = history.demand.map((value, i) => [i, value]);
     const maxValue = Math.max(PEAK_DRAW, ...history.supply, ...history.demand);
-    // Process area data
-    const parsedApcs = flow([
-      sortByField === 'name' && sortBy((apc) => apc.Name),
-      sortByField === 'charge' && sortBy((apc) => -apc.CellPct),
-      sortByField === 'draw' && sortBy((apc) => -apc.Load),
-    ])(
-      apcs.map((apc, i) => ({
-        ...apc,
-        // Generate a unique id
-        id: apc.name + i,
-      }))
-    );
+    let parsedApcs = apcs.map((apc, i) => ({
+      ...apc,
+      // Generate a unique id
+      id: apc.name + i,
+    }));
+    if (sortByField === 'name') {
+      parsedApcs = parsedApcs.sort(({ Name: a }, { Name: b }) =>
+        a.localeCompare(b)
+      );
+    } else if (sortByField === 'charge') {
+      parsedApcs = parsedApcs.sort(({ CellPct: a }, { CellPct: b }) => b - a);
+    } else if (sortByField === 'draw') {
+      parsedApcs = parsedApcs.sort(({ Load: a }, { Load: b }) => b - a);
+    }
 
     body = (
       <Fragment>
