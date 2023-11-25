@@ -1,4 +1,4 @@
-import { map, sortBy } from 'common/collections';
+import { sortBy } from 'common/collections';
 import { flow } from 'common/fp';
 import { toFixed } from 'common/math';
 import { pureComponentHooks } from 'common/react';
@@ -92,15 +92,16 @@ const DataView = (props, context) => {
     const maxValue = Math.max(PEAK_DRAW, ...history.supply, ...history.demand);
     // Process area data
     const parsedApcs = flow([
-      map((apc, i) => ({
-        ...apc,
-        // Generate a unique id
-        id: apc.name + i,
-      })),
       sortByField === 'name' && sortBy((apc) => apc.Name),
       sortByField === 'charge' && sortBy((apc) => -apc.CellPct),
       sortByField === 'draw' && sortBy((apc) => -apc.Load),
-    ])(apcs);
+    ])(
+      apcs.map((apc, i) => ({
+        ...apc,
+        // Generate a unique id
+        id: apc.name + i,
+      }))
+    );
 
     body = (
       <Fragment>

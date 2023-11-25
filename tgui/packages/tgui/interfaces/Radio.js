@@ -1,4 +1,3 @@
-import { map } from 'common/collections';
 import { toFixed } from 'common/math';
 import { useBackend } from '../backend';
 import {
@@ -36,14 +35,14 @@ export const Radio = (props, context) => {
     rc = RADIO_CHANNELS[i];
     colorMap[rc['name']] = rc['color'];
   }
-  const schannels = map((value, key) => ({
+  const schannels = data.schannels.map((value, key) => ({
     name: key,
     status: !!value,
-  }))(data.schannels);
-  const ichannels = map((value, key) => ({
+  }));
+  const ichannels = data.ichannels.map((value, key) => ({
     name: key,
     freq: value,
-  }))(data.ichannels);
+  }));
   return (
     <Window resizable>
       <Window.Content scrollable>

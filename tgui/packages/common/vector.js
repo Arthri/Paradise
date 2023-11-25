@@ -1,4 +1,4 @@
-import { map, reduce, zipWith } from './collections';
+import { reduce, zipWith } from './collections';
 
 /**
  * Creates a vector, with as many dimensions are there are arguments.
@@ -32,11 +32,11 @@ export const vecDivide = (...vecs) => {
 };
 
 export const vecScale = (vec, n) => {
-  return map((x) => x * n)(vec);
+  return vec.map((x) => x * n);
 };
 
 export const vecInverse = (vec) => {
-  return map((x) => -x)(vec);
+  return vec.map((x) => -x);
 };
 
 export const vecLength = (vec) => {
