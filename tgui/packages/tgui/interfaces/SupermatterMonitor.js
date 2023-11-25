@@ -1,4 +1,3 @@
-import { toFixed } from 'common/math';
 import { useBackend } from '../backend';
 import {
   Section,
@@ -115,7 +114,7 @@ const SupermatterMonitorDataView = (props, context) => {
                       bad: [7000, Infinity],
                     }}
                   >
-                    {toFixed(SM_power) + ' MeV/cm3'}
+                    {SM_power.toFixed() + ' MeV/cm3'}
                   </ProgressBar>
                 </LabeledList.Item>
                 <LabeledList.Item label="Temperature">
@@ -130,7 +129,7 @@ const SupermatterMonitorDataView = (props, context) => {
                       bad: [logScale(1000), Infinity],
                     }}
                   >
-                    {toFixed(SM_ambienttemp) + ' K'}
+                    {SM_ambienttemp.toFixed() + ' K'}
                   </ProgressBar>
                 </LabeledList.Item>
                 <LabeledList.Item label="Pressure">
@@ -144,7 +143,7 @@ const SupermatterMonitorDataView = (props, context) => {
                       bad: [logScale(1000), Infinity],
                     }}
                   >
-                    {toFixed(SM_ambientpressure) + ' kPa'}
+                    {SM_ambientpressure.toFixed() + ' kPa'}
                   </ProgressBar>
                 </LabeledList.Item>
               </LabeledList>
@@ -173,7 +172,7 @@ const SupermatterMonitorDataView = (props, context) => {
                       minValue={0}
                       maxValue={gasMaxAmount}
                     >
-                      {toFixed(gas.amount, 2) + '%'}
+                      {gas.amount.toFixed(2) + '%'}
                     </ProgressBar>
                   </LabeledList.Item>
                 ))}

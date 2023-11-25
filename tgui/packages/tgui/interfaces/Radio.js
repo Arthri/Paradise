@@ -1,4 +1,3 @@
-import { toFixed } from 'common/math';
 import { useBackend } from '../backend';
 import {
   Box,
@@ -51,7 +50,7 @@ export const Radio = (props, context) => {
             <LabeledList.Item label="Frequency">
               {(freqlock && (
                 <Box inline color="light-gray">
-                  {toFixed(frequency / 10, 1) + ' kHz'}
+                  {(frequency / 10).toFixed(1) + ' kHz'}
                 </Box>
               )) || (
                 <Fragment>
@@ -63,7 +62,7 @@ export const Radio = (props, context) => {
                     minValue={minFrequency / 10}
                     maxValue={maxFrequency / 10}
                     value={frequency / 10}
-                    format={(value) => toFixed(value, 1)}
+                    format={(value) => value.toFixed(1)}
                     onChange={(e, value) =>
                       act('frequency', {
                         adjust: value - frequency / 10,

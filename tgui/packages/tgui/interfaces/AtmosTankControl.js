@@ -6,7 +6,6 @@ import {
   LabeledList,
   ProgressBar,
 } from '../components';
-import { toFixed } from 'common/math';
 import { getGasColor, getGasLabel } from '../constants';
 import { Window } from '../layouts';
 
@@ -45,7 +44,7 @@ export const AtmosTankControl = (props, context) => {
                       minValue={0}
                       maxValue={100}
                     >
-                      {toFixed(sensors_list[s][g], 2) + '%'}
+                      {sensors_list[s][g].toFixed(2) + '%'}
                     </ProgressBar>
                   </LabeledList.Item>
                 ) : (

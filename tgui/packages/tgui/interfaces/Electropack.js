@@ -1,4 +1,3 @@
-import { toFixed } from 'common/math';
 import { useBackend } from '../backend';
 import { Button, LabeledList, NumberInput, Section } from '../components';
 import { Window } from '../layouts';
@@ -41,7 +40,7 @@ export const Electropack = (props, context) => {
                 minValue={minFrequency / 10}
                 maxValue={maxFrequency / 10}
                 value={frequency / 10}
-                format={(value) => toFixed(value, 1)}
+                format={(value) => value.toFixed(1)}
                 width="80px"
                 onChange={(e, value) =>
                   act('freq', {

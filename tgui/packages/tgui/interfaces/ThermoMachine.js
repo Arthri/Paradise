@@ -1,4 +1,3 @@
-import { toFixed } from 'common/math';
 import { useBackend } from '../backend';
 import {
   AnimatedNumber,
@@ -19,14 +18,14 @@ export const ThermoMachine = (props, context) => {
             <LabeledList.Item label="Temperature">
               <AnimatedNumber
                 value={data.temperature}
-                format={(value) => toFixed(value, 2)}
+                format={(value) => value.toFixed(2)}
               />
               {' K'}
             </LabeledList.Item>
             <LabeledList.Item label="Pressure">
               <AnimatedNumber
                 value={data.pressure}
-                format={(value) => toFixed(value, 2)}
+                format={(value) => value.toFixed(2)}
               />
               {' kPa'}
             </LabeledList.Item>

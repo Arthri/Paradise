@@ -51,13 +51,6 @@ export const round = (value, precision) => {
 };
 
 /**
- * Returns a string representing a number in fixed point notation.
- */
-export const toFixed = (value, fractionDigits = 0) => {
-  return Number(value).toFixed(Math.max(fractionDigits, 0));
-};
-
-/**
  * Checks whether a value is within the provided range.
  *
  * Range is an array of two numbers, for example: [0, 15].

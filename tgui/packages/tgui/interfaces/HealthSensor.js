@@ -1,4 +1,3 @@
-import { toFixed } from 'common/math';
 import { useBackend } from '../backend';
 import {
   Button,
@@ -37,7 +36,7 @@ export const HealthSensor = (props, context) => {
                 minValue={minHealth}
                 maxValue={maxHealth}
                 value={alarm_health}
-                format={(value) => toFixed(value, 1)}
+                format={(value) => value.toFixed(1)}
                 width="80px"
                 onDrag={(e, value) =>
                   act('alarm_health', {

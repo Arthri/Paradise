@@ -1,5 +1,4 @@
 import { useBackend } from '../../backend';
-import { toFixed } from 'common/math';
 import { LabeledList, NumberInput, Button } from '../../components';
 
 export const pai_radio = (props, context) => {
@@ -17,7 +16,7 @@ export const pai_radio = (props, context) => {
           minValue={minFrequency / 10}
           maxValue={maxFrequency / 10}
           value={frequency / 10}
-          format={(value) => toFixed(value, 1)}
+          format={(value) => value.toFixed(1)}
           onChange={(e, value) =>
             act('freq', {
               freq: value,

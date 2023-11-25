@@ -1,4 +1,4 @@
-import { clamp01, keyOfMatchingRange, scale, toFixed } from 'common/math';
+import { clamp01, keyOfMatchingRange, scale } from 'common/math';
 import { classes, pureComponentHooks } from 'common/react';
 import { Component } from 'inferno';
 import { computeBoxClassName, computeBoxProps } from './Box';
@@ -38,7 +38,7 @@ export const ProgressBar = (props) => {
       <div className="ProgressBar__content">
         {hasContent
           ? children
-          : toFixed(scaledValue * 100, fractionDigits) + '%'}
+          : (scaledValue * 100).toFixed(fractionDigits) + '%'}
       </div>
     </div>
   );

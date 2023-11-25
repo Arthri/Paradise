@@ -1,4 +1,3 @@
-import { toFixed } from 'common/math';
 import { useBackend } from '../backend';
 import {
   LabeledList,
@@ -27,7 +26,7 @@ export const TempGun = (props, context) => {
                 minValue={min_temp}
                 maxValue={max_temp}
                 value={target_temperature}
-                format={(value) => toFixed(value, 2)}
+                format={(value) => value.toFixed(2)}
                 width="50px"
                 onDrag={(e, value) =>
                   act('target_temperature', {

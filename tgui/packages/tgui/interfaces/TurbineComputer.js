@@ -1,7 +1,6 @@
 import { useBackend } from '../backend';
 import { Button, LabeledList, Section, ProgressBar } from '../components';
 import { Window } from '../layouts';
-import { toFixed } from 'common/math';
 
 export const TurbineComputer = (props, context) => {
   const { act, data } = useBackend(context);
@@ -82,7 +81,7 @@ const TurbineWorking = (props, context) => {
             bad: [90, Infinity],
           }}
         >
-          {toFixed(bearing_heat) + '%'}
+          {bearing_heat.toFixed() + '%'}
         </ProgressBar>
       </LabeledList.Item>
     </LabeledList>

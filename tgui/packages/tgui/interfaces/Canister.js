@@ -1,5 +1,3 @@
-import { toFixed } from 'common/math';
-import { Fragment } from 'inferno';
 import { useBackend } from '../backend';
 import {
   AnimatedNumber,
@@ -162,7 +160,7 @@ export const Canister = (props, context) => {
                 value={tankPressure}
                 format={(value) => {
                   if (value < 10000) {
-                    return toFixed(value) + ' kPa';
+                    return value.toFixed() + ' kPa';
                   }
                   return formatSiUnit(value * 1000, 1, 'Pa');
                 }}

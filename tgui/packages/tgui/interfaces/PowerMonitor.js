@@ -1,4 +1,3 @@
-import { toFixed } from 'common/math';
 import { pureComponentHooks } from 'common/react';
 import { decodeHtmlEntities } from 'common/string';
 import { Fragment } from 'inferno';
@@ -116,7 +115,7 @@ const DataView = (props, context) => {
                     maxValue={maxValue}
                     color="green"
                   >
-                    {toFixed(supply / 1000) + ' kW'}
+                    {(supply / 1000).toFixed() + ' kW'}
                   </ProgressBar>
                 </LabeledList.Item>
                 <LabeledList.Item label="Draw">
@@ -126,7 +125,7 @@ const DataView = (props, context) => {
                     maxValue={maxValue}
                     color="red"
                   >
-                    {toFixed(demand / 1000) + ' kW'}
+                    {(demand / 1000).toFixed() + ' kW'}
                   </ProgressBar>
                 </LabeledList.Item>
               </LabeledList>
@@ -255,7 +254,7 @@ const AreaCharge = (props) => {
         }
       />
       <Box inline width="36px" textAlign="right">
-        {toFixed(charge) + '%'}
+        {charge.toFixed() + '%'}
       </Box>
     </Fragment>
   );

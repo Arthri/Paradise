@@ -1,4 +1,4 @@
-import { round, toFixed } from 'common/math';
+import { round } from 'common/math';
 import { Fragment } from 'inferno';
 import { useBackend } from '../backend';
 import {
@@ -79,7 +79,7 @@ const ChemHeaterSettings = (_properties, context) => {
           {(isBeakerLoaded && (
             <AnimatedNumber
               value={currentTemp}
-              format={(value) => toFixed(value) + ' K'}
+              format={(value) => value.toFixed() + ' K'}
             />
           )) ||
             '—'}

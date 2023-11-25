@@ -1,4 +1,4 @@
-import { clamp, toFixed } from 'common/math';
+import { clamp } from 'common/math';
 import { Component } from 'inferno';
 
 const FPS = 20;
@@ -66,7 +66,7 @@ export class AnimatedNumber extends Component {
     else {
       const fraction = String(targetValue).split('.')[1];
       const precision = fraction ? fraction.length : 0;
-      formattedValue = toFixed(currentValue, clamp(precision, 0, 8));
+      formattedValue = currentValue.toFixed(clamp(precision, 0, 8));
     }
     // Use a custom render function
     if (typeof children === 'function') {

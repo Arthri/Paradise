@@ -1,4 +1,4 @@
-import { clamp, round, toFixed } from 'common/math';
+import { clamp, round } from 'common/math';
 
 const SI_SYMBOLS = [
   'f', // femto
@@ -44,7 +44,7 @@ export const formatSiUnit = (
   // TODO: Make numbers bigger than precision value show
   // up to 2 decimal numbers.
   const finalString =
-    toFixed(scaledNumber, scaledPrecision) + ' ' + symbol + unit;
+    scaledNumber.toFixed(clamp(scaledPrecision, 0, 20)) + ' ' + symbol + unit;
   return finalString.trim();
 };
 
@@ -59,7 +59,7 @@ export const formatMoney = (value, precision = 0) => {
   // Round the number and make it fixed precision
   let fixed = round(value, precision);
   if (precision > 0) {
-    fixed = toFixed(value, precision);
+    fixed = value.toFixed(precision);
   }
   fixed = String(fixed);
   // Place thousand separators
