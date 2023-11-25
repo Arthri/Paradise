@@ -165,11 +165,3 @@ export const decodeHtmlEntities = (str) => {
       })
   );
 };
-
-/**
- * Converts an object into a query string,
- */
-export const buildQueryString = (obj) =>
-  Object.keys(obj)
-    .map((key) => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
-    .join('&');

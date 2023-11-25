@@ -15,6 +15,7 @@ import {
   Table,
 } from '../components';
 import { Window } from '../layouts';
+import { logger } from '../logging';
 const PEAK_DRAW = 600000;
 
 export const PowerMonitor = (props, context) => {
@@ -30,6 +31,11 @@ export const PowerMonitor = (props, context) => {
 // This constant is so it can be thrown
 // into PDAs with minimal effort
 export const PowerMonitorMainContent = (props, context) => {
+  logger.log(
+    new URLSearchParams(
+      Object.entries({ a: 'bbfdg', d: 'dfgdg', c: 'dfghfd' })
+    ).toString()
+  );
   const { act, data } = useBackend(context);
   const { powermonitor, select_monitor } = data;
   return (
