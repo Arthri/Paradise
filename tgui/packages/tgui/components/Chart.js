@@ -1,4 +1,4 @@
-import { zipWith } from 'common/collections';
+import { zip } from 'common/collections';
 import { pureComponentHooks } from 'common/react';
 import { Component, createRef } from 'inferno';
 import { IS_IE8 } from '../byond';
@@ -8,8 +8,8 @@ const normalizeData = (data, scale, rangeX, rangeY) => {
   if (data.length === 0) {
     return [];
   }
-  const min = zipWith(Math.min)(...data);
-  const max = zipWith(Math.max)(...data);
+  const min = zip(...data).map((v) => Math.min(...v));
+  const max = zip(...data).map((v) => Math.max(...v));
   if (rangeX !== undefined) {
     min[0] = rangeX[0];
     max[0] = rangeX[1];
@@ -18,11 +18,11 @@ const normalizeData = (data, scale, rangeX, rangeY) => {
     min[1] = rangeY[0];
     max[1] = rangeY[1];
   }
-  const normalized = data.map((point) => {
-    return zipWith((value, min, max, scale) => {
-      return ((value - min) / (max - min)) * scale;
-    })(point, min, max, scale);
-  });
+  const normalized = data.map((point) =>
+    zip(point, min, max, scale).map(
+      ([value, min, max, scale]) => ((value - min) / (max - min)) * scale
+    )
+  );
   return normalized;
 };
 

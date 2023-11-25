@@ -1,4 +1,4 @@
-import { reduce, zipWith } from './collections';
+import { reduce, zip } from './collections';
 
 /**
  * Creates a vector, with as many dimensions are there are arguments.
@@ -16,19 +16,19 @@ const MUL = (a, b) => a * b;
 const DIV = (a, b) => a / b;
 
 export const vecAdd = (...vecs) => {
-  return reduce((a, b) => zipWith(ADD)(a, b))(vecs);
+  return reduce((a, b) => zip(a, b).map((v) => ADD(...v)))(vecs);
 };
 
 export const vecSubtract = (...vecs) => {
-  return reduce((a, b) => zipWith(SUB)(a, b))(vecs);
+  return reduce((a, b) => zip(a, b).map((v) => SUB(...v)))(vecs);
 };
 
 export const vecMultiply = (...vecs) => {
-  return reduce((a, b) => zipWith(MUL)(a, b))(vecs);
+  return reduce((a, b) => zip(a, b).map((v) => MUL(...v)))(vecs);
 };
 
 export const vecDivide = (...vecs) => {
-  return reduce((a, b) => zipWith(DIV)(a, b))(vecs);
+  return reduce((a, b) => zip(a, b).map((v) => DIV(...v)))(vecs);
 };
 
 export const vecScale = (vec, n) => {
@@ -40,7 +40,7 @@ export const vecInverse = (vec) => {
 };
 
 export const vecLength = (vec) => {
-  return Math.sqrt(reduce(ADD)(zipWith(MUL)(vec, vec)));
+  return Math.sqrt(reduce(ADD)(vecMultiply(vec, vec)));
 };
 
 export const vecNormalize = (vec) => {

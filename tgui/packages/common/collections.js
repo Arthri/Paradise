@@ -118,16 +118,3 @@ export const zip = (...arrays) => {
   }
   return result;
 };
-
-/**
- * This method is like "zip" except that it accepts iteratee to
- * specify how grouped values should be combined. The iteratee is
- * invoked with the elements of each group.
- *
- * @returns {any[]}
- */
-export const zipWith =
-  (iterateeFn) =>
-  (...arrays) => {
-    return zip(...arrays).map((values) => iterateeFn(...values));
-  };
