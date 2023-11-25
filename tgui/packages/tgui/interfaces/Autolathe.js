@@ -1,5 +1,5 @@
 import { flow } from 'common/fp';
-import { filter, sortBy } from 'common/collections';
+import { sortBy } from 'common/collections';
 import { useBackend, useSharedState } from '../backend';
 import {
   Box,
@@ -85,15 +85,15 @@ export const Autolathe = (props, context) => {
     });
   }
 
-  const recipesToShow = flow([
-    filter(
-      (recipe) =>
-        (recipe.category.indexOf(category) > -1 || searchText) &&
-        (data.showhacked || !recipe.hacked)
-    ),
-    searchText && filter(testSearch),
-    sortBy((recipe) => recipe.name.toLowerCase()),
-  ])(recipes);
+  let recipesToShow = recipes.filter(
+    (recipe) =>
+      (recipe.category.indexOf(category) > -1 || searchText) &&
+      (data.showhacked || !recipe.hacked)
+  );
+  if (searchText) {
+    recipesToShow = recipesToShow.filter(testSearch);
+  }
+  recipesToShow = sortBy((recipe) => recipe.name.toLowerCase())(recipesToShow);
 
   let rText = 'Build';
   if (searchText) {

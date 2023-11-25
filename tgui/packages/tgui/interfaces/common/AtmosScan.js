@@ -1,5 +1,3 @@
-import { filter } from 'common/collections';
-import { useBackend } from '../../backend';
 import { Box, LabeledList } from '../../components';
 
 const getItemColor = (value, min2, min1, max1, max2) => {
@@ -21,25 +19,29 @@ export const AtmosScan = (props, context) => {
   return (
     <Box>
       <LabeledList>
-        {filter(
-          (i) =>
-            i.val !== '0' || i.entry === 'Pressure' || i.entry === 'Temperature'
-        )(aircontents).map((item) => (
-          <LabeledList.Item
-            key={item.entry}
-            label={item.entry}
-            color={getItemColor(
-              item.val,
-              item.bad_low,
-              item.poor_low,
-              item.poor_high,
-              item.bad_high
-            )}
-          >
-            {item.val}
-            {item.units}
-          </LabeledList.Item>
-        ))}
+        {aircontents
+          .filter(
+            (i) =>
+              i.val !== '0' ||
+              i.entry === 'Pressure' ||
+              i.entry === 'Temperature'
+          )
+          .map((item) => (
+            <LabeledList.Item
+              key={item.entry}
+              label={item.entry}
+              color={getItemColor(
+                item.val,
+                item.bad_low,
+                item.poor_low,
+                item.poor_high,
+                item.bad_high
+              )}
+            >
+              {item.val}
+              {item.units}
+            </LabeledList.Item>
+          ))}
       </LabeledList>
     </Box>
   );

@@ -1,5 +1,4 @@
-import { filter, sortBy } from 'common/collections';
-import { flow } from 'common/fp';
+import { sortBy } from 'common/collections';
 import { classes } from 'common/react';
 import { createSearch } from 'common/string';
 import { Fragment } from 'inferno';
@@ -28,14 +27,15 @@ const prevNextCamera = (cameras, activeCamera) => {
  */
 const selectCameras = (cameras, searchText = '') => {
   const testSearch = createSearch(searchText, (camera) => camera.name);
-  return flow([
+  let result = cameras
     // Null camera filter
-    filter((camera) => camera?.name),
+    .filter((camera) => camera?.name);
+  if (searchText) {
     // Optional search term
-    searchText && filter(testSearch),
-    // Slightly expensive, but way better than sorting in BYOND
-    sortBy((camera) => camera.name),
-  ])(cameras);
+    result = result.filter(testSearch);
+  }
+  // Slightly expensive, but way better than sorting in BYOND
+  return sortBy((camera) => camera.name)(cameras);
 };
 
 export const CameraConsole = (props, context) => {

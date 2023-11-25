@@ -1,4 +1,3 @@
-import { filter } from 'common/collections';
 import { useBackend, useLocalState } from '../../backend';
 import {
   Box,
@@ -51,43 +50,45 @@ export const ActiveConversation = (props, context) => {
         stretchContents
       >
         <Section height="97%" overflowY="auto">
-          {filter((im) => im.target === active_convo)(messages).map((im, i) => (
-            <Box
-              textAlign={im.sent ? 'right' : 'left'}
-              position="relative"
-              mb={1}
-              key={i}
-            >
-              <Icon
-                fontSize={2.5}
-                color={im.sent ? '#4d9121' : '#cd7a0d'}
-                position="absolute"
-                left={im.sent ? null : '0px'}
-                right={im.sent ? '0px' : null}
-                bottom="-4px"
-                style={{
-                  'z-index': '0',
-                  'transform': im.sent ? 'scale(-1, 1)' : null,
-                }}
-                name="comment"
-              />
+          {messages
+            .filter((im) => im.target === active_convo)
+            .map((im, i) => (
               <Box
-                inline
-                backgroundColor={im.sent ? '#4d9121' : '#cd7a0d'}
-                p={1}
-                maxWidth="100%"
+                textAlign={im.sent ? 'right' : 'left'}
                 position="relative"
-                textAlign={im.sent ? 'left' : 'right'}
-                style={{
-                  'z-index': '1',
-                  'border-radius': '10px',
-                  'word-break': 'normal',
-                }}
+                mb={1}
+                key={i}
               >
-                {im.sent ? 'You:' : 'Them:'} {im.message}
+                <Icon
+                  fontSize={2.5}
+                  color={im.sent ? '#4d9121' : '#cd7a0d'}
+                  position="absolute"
+                  left={im.sent ? null : '0px'}
+                  right={im.sent ? '0px' : null}
+                  bottom="-4px"
+                  style={{
+                    'z-index': '0',
+                    'transform': im.sent ? 'scale(-1, 1)' : null,
+                  }}
+                  name="comment"
+                />
+                <Box
+                  inline
+                  backgroundColor={im.sent ? '#4d9121' : '#cd7a0d'}
+                  p={1}
+                  maxWidth="100%"
+                  position="relative"
+                  textAlign={im.sent ? 'left' : 'right'}
+                  style={{
+                    'z-index': '1',
+                    'border-radius': '10px',
+                    'word-break': 'normal',
+                  }}
+                >
+                  {im.sent ? 'You:' : 'Them:'} {im.message}
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))}
         </Section>
         <Button
           mt={1}
@@ -122,17 +123,19 @@ export const ActiveConversation = (props, context) => {
             'overflow-y': 'auto',
           }}
         >
-          {filter((im) => im.target === active_convo)(messages).map((im, i) => (
-            <Box
-              key={i}
-              color={im.sent ? '#4d9121' : '#cd7a0d'}
-              style={{
-                'word-break': 'normal',
-              }}
-            >
-              {im.sent ? 'You:' : 'Them:'} <Box inline>{im.message}</Box>
-            </Box>
-          ))}
+          {messages
+            .filter((im) => im.target === active_convo)
+            .map((im, i) => (
+              <Box
+                key={i}
+                color={im.sent ? '#4d9121' : '#cd7a0d'}
+                style={{
+                  'word-break': 'normal',
+                }}
+              >
+                {im.sent ? 'You:' : 'Them:'} <Box inline>{im.message}</Box>
+              </Box>
+            ))}
         </Section>
         <Button
           mt={1}

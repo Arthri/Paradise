@@ -1,6 +1,4 @@
-import { flow } from 'common/fp';
-import { Fragment } from 'inferno';
-import { filter, sortBy } from 'common/collections';
+import { sortBy } from 'common/collections';
 import { useBackend, useSharedState, useLocalState } from '../backend';
 import {
   Button,
@@ -197,16 +195,15 @@ const CataloguePane = (_properties, context) => {
     context,
     'selectedAccount'
   );
-  const cratesToShow = flow([
-    filter(
-      (pack) =>
-        pack.cat ===
-          categories.filter((c) => c.name === category)[0].category ||
-        searchText
-    ),
-    searchText && filter(packSearch),
-    sortBy((pack) => pack.name.toLowerCase()),
-  ])(supply_packs);
+  let cratesToShow = supply_packs.filter(
+    (pack) =>
+      pack.cat === categories.filter((c) => c.name === category)[0].category ||
+      searchText
+  );
+  if (searchText) {
+    cratesToShow = cratesToShow.filter(packSearch);
+  }
+  cratesToShow = sortBy((pack) => pack.name.toLowerCase())(cratesToShow);
 
   let titleText = 'Crate Catalogue';
   if (searchText) {

@@ -1,7 +1,7 @@
 import { useBackend, useLocalState } from '../../backend';
 import { createSearch } from 'common/string';
 import { flow } from 'common/fp';
-import { filter, sortBy } from 'common/collections';
+import { sortBy } from 'common/collections';
 import { Box, Input, Button, Section, LabeledList } from '../../components';
 
 export const SimpleRecords = (props, context) => {
@@ -27,14 +27,15 @@ const SelectionView = (props, context) => {
   // Search for peeps
   const SelectMembers = (people, searchText = '') => {
     const MemberSearch = createSearch(searchText, (member) => member.Name);
-    return flow([
+    let result = recordsList
       // Null member filter
-      filter((member) => member?.Name),
+      .filter((member) => member?.Name);
+    if (searchText) {
       // Optional search term
-      searchText && filter(MemberSearch),
-      // Slightly expensive, but way better than sorting in BYOND
-      sortBy((member) => member.Name),
-    ])(recordsList);
+      result = result.filter(MemberSearch);
+    }
+    // Slightly expensive, but way better than sorting in BYOND
+    return sortBy((member) => member.Name)(result);
   };
 
   const formattedRecords = SelectMembers(recordsList, searchText);

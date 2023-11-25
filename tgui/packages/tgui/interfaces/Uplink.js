@@ -1,5 +1,4 @@
-import { filter, sortBy } from 'common/collections';
-import { flow } from 'common/fp';
+import { sortBy } from 'common/collections';
 import { createSearch, decodeHtmlEntities } from 'common/string';
 import { Fragment } from 'inferno';
 import { useBackend, useLocalState } from '../backend';
@@ -98,11 +97,11 @@ const ItemsPage = (_properties, context) => {
       let is_hijack = item.hijack_only === 1 ? '|' + 'hijack' : '';
       return item.name + '|' + item.desc + '|' + item.cost + 'tc' + is_hijack;
     });
-    return flow([
-      filter((item) => item?.name), // Make sure it has a name
-      searchText && filter(EquipmentSearch), // Search for anything
-      sortBy((item) => item?.name), // Sort by name
-    ])(cat);
+    let results = cat.filter((item) => item?.name); // Make sure it has a name
+    if (searchText) {
+      results = results.filter(EquipmentSearch); // Search for anything
+    }
+    return sortBy((item) => item?.name)(results); // Sort by name
   };
   const handleSearch = (value) => {
     setSearchText(value);
@@ -388,14 +387,15 @@ const ExploitableInfoPage = (_properties, context) => {
   // Search for peeps
   const SelectMembers = (people, searchText = '') => {
     const MemberSearch = createSearch(searchText, (member) => member.name);
-    return flow([
+    let results = people
       // Null member filter
-      filter((member) => member?.name),
+      .filter((member) => member?.name);
+    if (searchText) {
       // Optional search term
-      searchText && filter(MemberSearch),
-      // Slightly expensive, but way better than sorting in BYOND
-      sortBy((member) => member.name),
-    ])(people);
+      results = results.filter(MemberSearch);
+    }
+    // Slightly expensive, but way better than sorting in BYOND
+    return sortBy((member) => member.name)(people);
   };
 
   const crew = SelectMembers(exploitable, searchText);
