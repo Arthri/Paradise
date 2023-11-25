@@ -106,15 +106,6 @@ export const zip = (...arrays) => {
   if (arrays.length === 0) {
     return;
   }
-  const numArrays = arrays.length;
-  const numValues = arrays[0].length;
-  const result = [];
-  for (let valueIndex = 0; valueIndex < numValues; valueIndex++) {
-    const entry = [];
-    for (let arrayIndex = 0; arrayIndex < numArrays; arrayIndex++) {
-      entry.push(arrays[arrayIndex][valueIndex]);
-    }
-    result.push(entry);
-  }
-  return result;
+  const otherArrays = arrays.slice(1);
+  return arrays[0].map((v, i) => [v, ...otherArrays.map((array) => array[i])]);
 };
