@@ -5,6 +5,7 @@
  */
 
 import { clamp01 } from 'common/math';
+import { createRef } from 'inferno';
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Stack, Section, Input } from '../components';
 import { Window } from '../layouts';
@@ -51,6 +52,24 @@ export const ListInput = (props, context) => {
     'selected_button',
     buttons[0]
   );
+
+  const moveSelection = (direction) => {
+    let index = 0;
+    for (index; index < displayedArray.length; index++) {
+      if (displayedArray[index] === selectedButton) {
+        break;
+      }
+    }
+    index += direction;
+    if (index < 0) {
+      index = displayedArray.length - 1;
+    } else if (index >= displayedArray.length) {
+      index = 0;
+    }
+    setSelectedButton(displayedArray[index]);
+    setLastCharCode(null);
+  };
+
   return (
     <Window title={title} width={325} height={350}>
       {timeout !== undefined && <Loader value={timeout} />}
@@ -70,27 +89,11 @@ export const ListInput = (props, context) => {
                 }
                 lastScrollTime = performance.now() + 125;
 
-                if (e.keyCode === KEY_UP || e.keyCode === KEY_DOWN) {
-                  let direction = 1;
-                  if (e.keyCode === KEY_UP) {
-                    direction = -1;
-                  }
-
-                  let index = 0;
-                  for (index; index < buttons.length; index++) {
-                    if (buttons[index] === selectedButton) {
-                      break;
-                    }
-                  }
-                  index += direction;
-                  if (index < 0) {
-                    index = buttons.length - 1;
-                  } else if (index >= buttons.length) {
-                    index = 0;
-                  }
-                  setSelectedButton(buttons[index]);
-                  setLastCharCode(null);
-                  document.getElementById(buttons[index]).focus();
+                if (e.keyCode === KEY_UP) {
+                  moveSelection(-1);
+                  return;
+                } else if (e.keyCode === KEY_DOWN) {
+                  moveSelection(1);
                   return;
                 }
 
@@ -185,6 +188,17 @@ export const ListInput = (props, context) => {
                 onEnter={(e, value) =>
                   act('choose', { choice: selectedButton })
                 }
+                onKeyDown={(e) => {
+                  if (e.keyCode === KEY_UP) {
+                    moveSelection(-1);
+                    e.preventDefault();
+                    return;
+                  } else if (e.keyCode === KEY_DOWN) {
+                    moveSelection(1);
+                    e.preventDefault();
+                    return;
+                  }
+                }}
               />
             </Stack.Item>
           )}
