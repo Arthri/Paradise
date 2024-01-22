@@ -73,13 +73,15 @@ export const ListInput = (props, context) => {
     scrollButtonIntoView(displayedArray[index]);
   };
 
-  const scrollButtonIntoView = (buttonId) => {
-    const selectedButtonElement = document.getElementById(buttonId);
-    const sectionRect = document
+  const getMainSection = () =>
+    document
       .getElementById(SECTION_ID)
       .getElementsByClassName('Section__rest')[0]
-      .getElementsByClassName('Section__content')[0]
-      .getBoundingClientRect();
+      .getElementsByClassName('Section__content')[0];
+
+  const scrollButtonIntoView = (buttonId) => {
+    const selectedButtonElement = document.getElementById(buttonId);
+    const sectionRect = getMainSection().getBoundingClientRect();
     const buttonRect = selectedButtonElement.getBoundingClientRect();
     if (buttonRect.top < sectionRect.top) {
       selectedButtonElement.scrollIntoView(true);
@@ -90,27 +92,31 @@ export const ListInput = (props, context) => {
 
   // Key bindings shared between the content area and the search box.
   const sharedKeyBinds = (e) => {
-    if (e.keyCode === KEY_UP) {
-      moveSelection(-1);
-      e.preventDefault();
-      return;
-    } else if (e.keyCode === KEY_DOWN) {
-      moveSelection(1);
-      e.preventDefault();
-      return;
-    } else if (e.keyCode === KEY_HOME) {
-      const button = displayedArray[0];
-      setSelectedButton(button);
-      scrollButtonIntoView(button);
-      e.preventDefault();
-      return;
-    } else if (e.keyCode === KEY_END) {
-      const button = displayedArray[displayedArray.length - 1];
-      setSelectedButton(button);
-      scrollButtonIntoView(button);
-      e.preventDefault();
-      return;
+    switch (e.keyCode) {
+      case KEY_UP:
+        moveSelection(-1);
+        break;
+      case KEY_DOWN:
+        moveSelection(1);
+        break;
+      case KEY_HOME:
+        {
+          const button = displayedArray[0];
+          setSelectedButton(button);
+          scrollButtonIntoView(button);
+        }
+        break;
+      case KEY_END:
+        {
+          const button = displayedArray[displayedArray.length - 1];
+          setSelectedButton(button);
+          scrollButtonIntoView(button);
+        }
+        break;
+      default:
+        return;
     }
+    e.preventDefault();
   };
 
   return (
