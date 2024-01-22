@@ -172,12 +172,11 @@ export const ListInput = (props, context) => {
                   fluid
                   selected={selectedButton === button}
                   onClick={() => {
-                    if (selectedButton === button) {
-                      act('choose', { choice: button });
-                    } else {
-                      setSelectedButton(button);
-                    }
+                    setSelectedButton(button);
                     setLastCharCode(null);
+                  }}
+                  onDblClick={() => {
+                    act('choose', { choice: button });
                   }}
                 />
               ))}
