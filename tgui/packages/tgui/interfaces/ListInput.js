@@ -168,14 +168,20 @@ export const ListInput = (props, context) => {
               <Input
                 width="100%"
                 autoFocus
-                onInput={(e, value) =>
-                  setDisplayedArray(
-                    buttons.filter(
-                      (val) =>
-                        val.toLowerCase().search(value.toLowerCase()) !== -1
-                    )
-                  )
-                }
+                onInput={(e, value) => {
+                  const displayedArray = buttons.filter(
+                    (val) =>
+                      val.toLowerCase().search(value.toLowerCase()) !== -1
+                  );
+                  setDisplayedArray(displayedArray);
+
+                  if (
+                    displayedArray.length > 0 &&
+                    !displayedArray.includes(selectedButton)
+                  ) {
+                    setSelectedButton(displayedArray[0]);
+                  }
+                }}
                 onEnter={(e, value) =>
                   act('choose', { choice: selectedButton })
                 }
