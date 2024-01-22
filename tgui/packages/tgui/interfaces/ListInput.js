@@ -8,7 +8,14 @@ import { clamp01 } from 'common/math';
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Stack, Section, Input } from '../components';
 import { Window } from '../layouts';
-import { KEY_UP, KEY_DOWN, KEY_HOME, KEY_END } from 'common/keycodes';
+import {
+  KEY_UP,
+  KEY_DOWN,
+  KEY_HOME,
+  KEY_END,
+  KEY_PAGEUP,
+  KEY_PAGEDOWN,
+} from 'common/keycodes';
 
 let lastScrollTime = 0;
 
@@ -90,6 +97,12 @@ export const ListInput = (props, context) => {
     }
   };
 
+  const pageShift = (direction) => {
+    const section = getMainSection();
+    const sectionRect = section.getBoundingClientRect();
+    section.scrollTop += sectionRect.height * direction;
+  };
+
   // Key bindings shared between the content area and the search box.
   const sharedKeyBinds = (e) => {
     switch (e.keyCode) {
@@ -111,6 +124,22 @@ export const ListInput = (props, context) => {
           const button = displayedArray[displayedArray.length - 1];
           setSelectedButton(button);
           scrollButtonIntoView(button);
+        }
+        break;
+      case KEY_PAGEUP:
+        {
+          if (e.ctrlKey) {
+            pageShift(-1);
+            break;
+          }
+        }
+        break;
+      case KEY_PAGEDOWN:
+        {
+          if (e.ctrlKey) {
+            pageShift(1);
+            break;
+          }
         }
         break;
       default:
