@@ -8,7 +8,7 @@ import { clamp01 } from 'common/math';
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Stack, Section, Input } from '../components';
 import { Window } from '../layouts';
-import { KEY_UP, KEY_DOWN } from 'common/keycodes';
+import { KEY_UP, KEY_DOWN, KEY_HOME, KEY_END } from 'common/keycodes';
 
 let lastScrollTime = 0;
 
@@ -70,9 +70,11 @@ export const ListInput = (props, context) => {
     setSelectedButton(displayedArray[index]);
     setLastCharCode(null);
 
-    const selectedButtonElement = document.getElementById(
-      displayedArray[index]
-    );
+    scrollButtonIntoView(displayedArray[index]);
+  };
+
+  const scrollButtonIntoView = (buttonId) => {
+    const selectedButtonElement = document.getElementById(buttonId);
     const sectionRect = document
       .getElementById(SECTION_ID)
       .getElementsByClassName('Section__rest')[0]
@@ -83,6 +85,31 @@ export const ListInput = (props, context) => {
       selectedButtonElement.scrollIntoView(true);
     } else if (buttonRect.bottom > sectionRect.bottom) {
       selectedButtonElement.scrollIntoView(false);
+    }
+  };
+
+  // Key bindings shared between the content area and the search box.
+  const sharedKeyBinds = (e) => {
+    if (e.keyCode === KEY_UP) {
+      moveSelection(-1);
+      e.preventDefault();
+      return;
+    } else if (e.keyCode === KEY_DOWN) {
+      moveSelection(1);
+      e.preventDefault();
+      return;
+    } else if (e.keyCode === KEY_HOME) {
+      const button = displayedArray[0];
+      setSelectedButton(button);
+      scrollButtonIntoView(button);
+      e.preventDefault();
+      return;
+    } else if (e.keyCode === KEY_END) {
+      const button = displayedArray[displayedArray.length - 1];
+      setSelectedButton(button);
+      scrollButtonIntoView(button);
+      e.preventDefault();
+      return;
     }
   };
 
@@ -106,11 +133,8 @@ export const ListInput = (props, context) => {
                 }
                 lastScrollTime = performance.now() + 125;
 
-                if (e.keyCode === KEY_UP) {
-                  moveSelection(-1);
-                  return;
-                } else if (e.keyCode === KEY_DOWN) {
-                  moveSelection(1);
+                sharedKeyBinds(e);
+                if (e.defaultPrevented) {
                   return;
                 }
 
@@ -204,17 +228,7 @@ export const ListInput = (props, context) => {
                 onEnter={(e, value) =>
                   act('choose', { choice: selectedButton })
                 }
-                onKeyDown={(e) => {
-                  if (e.keyCode === KEY_UP) {
-                    moveSelection(-1);
-                    e.preventDefault();
-                    return;
-                  } else if (e.keyCode === KEY_DOWN) {
-                    moveSelection(1);
-                    e.preventDefault();
-                    return;
-                  }
-                }}
+                onKeyDown={(e) => sharedKeyBinds(e)}
               />
             </Stack.Item>
           )}
