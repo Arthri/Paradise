@@ -188,6 +188,7 @@ export const ListInput = (props, context) => {
         return;
     }
     e.stopPropagation();
+    e.stopImmediatePropagation();
     e.preventDefault();
   };
 
