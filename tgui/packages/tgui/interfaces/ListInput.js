@@ -176,6 +176,9 @@ export const ListInput = (props, context) => {
                     )
                   )
                 }
+                onEnter={(e, value) =>
+                  act('choose', { choice: selectedButton })
+                }
               />
             </Stack.Item>
           )}
