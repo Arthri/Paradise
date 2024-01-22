@@ -5,13 +5,14 @@
  */
 
 import { clamp01 } from 'common/math';
-import { createRef } from 'inferno';
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Stack, Section, Input } from '../components';
 import { Window } from '../layouts';
 import { KEY_UP, KEY_DOWN } from 'common/keycodes';
 
 let lastScrollTime = 0;
+
+const SECTION_ID = 'ListInput__Section';
 
 export const ListInput = (props, context) => {
   const { act, data } = useBackend(context);
@@ -68,6 +69,21 @@ export const ListInput = (props, context) => {
     }
     setSelectedButton(displayedArray[index]);
     setLastCharCode(null);
+
+    const selectedButtonElement = document.getElementById(
+      displayedArray[index]
+    );
+    const sectionRect = document
+      .getElementById(SECTION_ID)
+      .getElementsByClassName('Section__rest')[0]
+      .getElementsByClassName('Section__content')[0]
+      .getBoundingClientRect();
+    const buttonRect = selectedButtonElement.getBoundingClientRect();
+    if (buttonRect.top < sectionRect.top) {
+      selectedButtonElement.scrollIntoView(true);
+    } else if (buttonRect.bottom > sectionRect.bottom) {
+      selectedButtonElement.scrollIntoView(false);
+    }
   };
 
   return (
@@ -80,6 +96,7 @@ export const ListInput = (props, context) => {
               fill
               scrollable
               className="ListInput__Section"
+              id={SECTION_ID}
               title={message}
               tabIndex={1}
               onKeyDown={(e) => {
