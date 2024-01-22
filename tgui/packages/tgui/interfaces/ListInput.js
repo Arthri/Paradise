@@ -4,7 +4,7 @@
  * @license MIT
  */
 
-import { clamp01 } from 'common/math';
+import { clamp } from 'common/math';
 import { useBackend, useLocalState } from '../backend';
 import { Box, Button, Stack, Section, Input } from '../components';
 import { Window } from '../layouts';
@@ -61,14 +61,16 @@ export const ListInput = (props, context) => {
     buttons[0]
   );
 
-  const moveSelection = (direction) => {
-    let index = 0;
-    for (index; index < displayedArray.length; index++) {
+  const getSelectedIndex = () => {
+    for (let index = 0; index < displayedArray.length; index++) {
       if (displayedArray[index] === selectedButton) {
-        break;
+        return index;
       }
     }
-    index += direction;
+  };
+
+  const moveSelection = (direction) => {
+    let index = getSelectedIndex() + direction;
     if (index < 0) {
       index = displayedArray.length - 1;
     } else if (index >= displayedArray.length) {
@@ -100,7 +102,41 @@ export const ListInput = (props, context) => {
   const pageShift = (direction) => {
     const section = getMainSection();
     const sectionRect = section.getBoundingClientRect();
-    section.scrollTop += sectionRect.height * direction;
+    section.scrollTop = clamp(
+      section.scrollTop + sectionRect.height * direction,
+      0,
+      section.scrollHeight - sectionRect.height
+    );
+  };
+
+  const selectionPageShift = (direction) => {
+    const section = getMainSection();
+    const sectionRect = section.getBoundingClientRect();
+    const choices = section.getElementsByClassName('ListInput__Choice');
+    const selectedIndex = getSelectedIndex();
+    const selectedElement = choices[selectedIndex];
+    const selectedRect = selectedElement.getBoundingClientRect();
+    const targetY = selectedRect.top + sectionRect.height * direction;
+    let bestCandidate;
+    for (
+      let i = selectedIndex;
+      direction === 1 ? i < choices.length : i >= 0;
+      i += 1 * direction
+    ) {
+      const choiceRect = choices[i].getBoundingClientRect();
+      bestCandidate = displayedArray[i];
+      const distance =
+        direction === 1
+          ? choiceRect.top - targetY
+          : targetY - choiceRect.bottom;
+      if (distance > 0) {
+        setSelectedButton(displayedArray[i]);
+        scrollButtonIntoView(displayedArray[i]);
+        return;
+      }
+    }
+    setSelectedButton(bestCandidate);
+    scrollButtonIntoView(bestCandidate);
   };
 
   // Key bindings shared between the content area and the search box.
@@ -128,18 +164,24 @@ export const ListInput = (props, context) => {
         break;
       case KEY_PAGEUP:
         {
+          pageShift(-1);
+
           if (e.ctrlKey) {
-            pageShift(-1);
             break;
           }
+
+          selectionPageShift(-1);
         }
         break;
       case KEY_PAGEDOWN:
         {
+          pageShift(1);
+
           if (e.ctrlKey) {
-            pageShift(1);
             break;
           }
+
+          selectionPageShift(1);
         }
         break;
       default:
@@ -224,6 +266,7 @@ export const ListInput = (props, context) => {
             >
               {displayedArray.map((button) => (
                 <Button
+                  className="ListInput__Choice"
                   color="transparent"
                   content={button}
                   id={button}
