@@ -187,6 +187,7 @@ export const ListInput = (props, context) => {
       default:
         return;
     }
+    e.stopPropagation();
     e.preventDefault();
   };
 
