@@ -42,7 +42,7 @@ jobs:
       - name: Remove /tg/ui Build Tag
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
         env:
-          BASE_REPOSITORY: ${{ github.repository }}
+          GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr edit "$PULL_REQUEST_NUMBER" --remove-label "$TGUI_BUILD_TAG" --repository "$BASE_REPOSITORY"
