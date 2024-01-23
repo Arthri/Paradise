@@ -112,7 +112,7 @@ jobs:
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
         run: |
           source ~/.nvm/nvm.sh
-          nvm use
+          nvm use default
           (cd tgui && bin/tgui --mode=production)
       - name: Commit and Push
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
