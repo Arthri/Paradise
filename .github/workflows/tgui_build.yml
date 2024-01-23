@@ -27,16 +27,17 @@ jobs:
         if: ${{ github.event.label.name != env.TGUI_BUILD_TAG }}
         run: |
           echo 'TERMINATE_WORKFLOW=true' >> "$GITHUB_ENV"
+
+      - name: Checkout Repository
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        uses: actions/checkout@v4
+
       - name: Remove /tg/ui Build Tag
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh pr edit "$PULL_REQUEST_NUMBER" --remove-label "$TGUI_BUILD_TAG"
-
-      - name: Checkout Repository
-        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
-        uses: actions/checkout@v4
 
       - name: Setup Git User
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
