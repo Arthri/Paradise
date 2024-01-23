@@ -114,7 +114,8 @@ const DNAModifierOccupant = (props, context) => {
             <Box color="bad">
               <Icon name="exclamation-circle" />
               &nbsp; The occupant&apos;s DNA structure is ruined beyond
-              recognition, please insert a subject with an intact DNA structure.
+              recognition, please inserta a subject with an intact DNA
+              structure.
             </Box>
           ) : (
             <LabeledList>
