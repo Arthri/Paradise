@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-22.04
 
     permissions:
+      # Required to commit built files
+      contents: write
       # Required to add/remove labels
       pull-requests: write
 
