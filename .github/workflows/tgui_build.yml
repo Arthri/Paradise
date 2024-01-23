@@ -11,7 +11,7 @@ on:
 
 env:
   TERMINATE_WORKFLOW: false
-  NODE_VERSION_TO_DOWNLOAD: 20
+  NODE_MAJOR_VERSION: 20
   PULL_REQUEST_NUMBER: ${{ github.event.number }}
   TGUI_BUILD_TAG: ${{ vars.TGUI_BUILD_TAG || '[TGUI] Build' }}
 
@@ -52,7 +52,7 @@ jobs:
         run: |
           source ~/.nvm/nvm.sh
           echo 'NVM_DIR='"$NVM_DIR" >> "$GITHUB_ENV"
-          echo 'NODE_VERSION='"$(nvm version-remote 20)" >> "$GITHUB_ENV"
+          echo 'NODE_VERSION='"$(nvm version-remote $NODE_MAJOR_VERSION)" >> "$GITHUB_ENV"
       - name: Cache Node.js
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
         uses: actions/cache@v4
@@ -66,7 +66,8 @@ jobs:
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
         run: |
           source ~/.nvm/nvm.sh
-          nvm install "$NODE_VERSION_TO_DOWNLOAD" --default
+          nvm install "$NODE_VERSION"
+          nvm alias default "$NODE_VERSION"
           echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
           echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> $GITHUB_OUTPUT
       - name: Cache Dependencies
