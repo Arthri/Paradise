@@ -1,9 +1,12 @@
 name: Build /tg/ui
 on:
-  pull_request:
+  pull_request_target:
     # TEMP BRANCH
     branches: [master, tgui-workflow]
-    paths: ["tgui/**/*"]
+    paths:
+      - tgui/**/*
+    paths-ignore:
+      - .github/workflows/**/*
     types:
       - labeled
 
