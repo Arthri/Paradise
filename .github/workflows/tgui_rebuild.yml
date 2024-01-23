@@ -1,0 +1,123 @@
+name: Build /tg/ui
+on:
+  pull_request:
+    branches: [master]
+    paths: ["tgui/**/*"]
+    types:
+      - labeled
+
+env:
+  TERMINATE_WORKFLOW: false
+  NODE_VERSION_TO_DOWNLOAD: 20
+  PULL_REQUEST_NUMBER: ${{ github.event.number }}
+  TGUI_BUILD_TAG: ${{ vars.TGUI_BUILD_TAG || '[TGUI] Build' }}
+
+jobs:
+  build-tgui:
+    name: Build tgui
+    runs-on: ubuntu-22.04
+
+    permissions:
+      # Required to add/remove labels
+      pull-requests: write
+
+    steps:
+      - name: Terminate if not labeled with /tg/ui Build Tag
+        if: ${{ github.event.label.name != env.TGUI_BUILD_TAG }}
+        run: |
+          echo 'TERMINATE_WORKFLOW=true' >> "$GITHUB_ENV"
+      - name: Remove /tg/ui Build Tag
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        run: |
+          gh pr edit "$PULL_REQUEST_NUMBER" --remove-label "$TGUI_BUILD_TAG"
+
+      - name: Checkout Repository
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        uses: actions/checkout@v4
+
+      - name: Setup Git User
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        run: |
+          git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
+          git config --global user.name ${{ vars.GIT_USERNAME || '/tg/ui Builder' }}
+
+      - name: Get Information from Node Version Manager
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        run: |
+          source ~/.nvm/nvm.sh
+          echo 'NVM_DIR='"$NVM_DIR" >> "$GITHUB_ENV"
+          echo 'NODE_VERSION='"$(nvm version-remote 20)" >> "$GITHUB_ENV"
+      - name: Cache Node.js
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}
+          path: |
+            ${{ env.NVM_DIR }}
+
+      - name: Install Dependencies
+        id: install-dependencies
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        run: |
+          source ~/.nvm/nvm.sh
+          nvm install "$NODE_VERSION_TO_DOWNLOAD" --default
+          echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
+          echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> $GITHUB_OUTPUT
+      - name: Cache Dependencies
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          path: |
+            **/node_modules
+            **/.yarn
+            ${{ steps.install-dependencies.outputs.NPM_CACHE_DIR }}
+            ${{ steps.install-dependencies.outputs.NPM_GLOBAL_CACHE_DIR }}
+
+      - name: Update Branch
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        env:
+          REPOSITORY: ${{ github.repository }}
+          HEAD_LABEL: ${{ github.event.pull_request.head.label }}
+          HEAD_BRANCH: ${{ github.head_ref }}
+        run: |
+          compare_result=$(curl -L -s --fail-with-body \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/compare/master...$HEAD_LABEL")
+          behind_by=$(echo "$compare_result" | jq '.behind_by')
+          ahead_by=$(echo "$compare_result" | jq '.ahead_by')
+          if [ "$behind_by" -le 0 ] ; then
+            echo '- Skipping master merge. No changes to merge.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          else
+            echo '- Merging master branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+          git fetch origin "$HEAD_BRANCH" --depth=$((ahead_by + 1))
+          git fetch origin master --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
+          exit_code=0
+          merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
+          if [ "$exit_code" -eq 0 ] ; then
+            exit 0
+          elif echo $merge_conflicts | grep -v ^tgui/public/ ; then
+            echo '- Automatic merge failed. Non-tgui bundle files have conflicts.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+      - name: Build
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        run: |
+          source ~/.nvm/nvm.sh
+          nvm use
+          (cd tgui && bin/tgui --mode=production)
+      - name: Commit and Push
+        if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
+        run: |
+          if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
+            echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            git add --all
+            git commit -m "Build and update tgui"
+            git push
+            echo '- Built, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
