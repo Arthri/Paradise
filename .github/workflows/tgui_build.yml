@@ -36,7 +36,7 @@ jobs:
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.head_ref }}
+          ref: ${{ github.head_ref }}
 
       - name: Remove /tg/ui Build Tag
         if: ${{ env.TERMINATE_WORKFLOW != 'true' }}
