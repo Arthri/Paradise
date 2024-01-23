@@ -1,7 +1,8 @@
 name: Build /tg/ui
 on:
   pull_request:
-    branches: [master]
+    # TEMP BRANCH
+    branches: [master, tgui-workflow]
     paths: ["tgui/**/*"]
     types:
       - labeled
