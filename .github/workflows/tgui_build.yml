@@ -4,9 +4,8 @@ on:
     # TEMP BRANCH
     branches: [master, tgui-workflow]
     paths:
-      - tgui/**/*
-    paths-ignore:
-      - .github/workflows/**/*
+      - "!.github/workflows/**/*"
+      - "tgui/**/*"
     types:
       - labeled
 
