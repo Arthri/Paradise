@@ -1,0 +1,116 @@
+name: Build /tg/ui
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: The repository to check out.
+        required: false
+        type: string
+      branch:
+        description: The branch in the repository to check out.
+        required: true
+        type: string
+      merge-default-branch:
+        default: true
+        description: If checked or set to true, the default branch(usually main or master) will be merged into the current branch before building.
+        required: false
+        type: boolean
+
+env:
+  DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+  NODE_MAJOR_VERSION: 20
+
+jobs:
+  build-tgui:
+    name: Build /tg/ui
+    runs-on: ubuntu-22.04
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.branch }}
+
+      - name: Setup Git User
+        run: |
+          git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
+          git config --global user.name ${{ vars.GIT_USERNAME || '/tg/ui Builder' }}
+
+      - name: Get Information from Node Version Manager
+        run: |
+          source ~/.nvm/nvm.sh
+          echo 'NVM_DIR='"$NVM_DIR" >> "$GITHUB_ENV"
+          echo 'NODE_VERSION='"$(nvm version-remote $NODE_MAJOR_VERSION)" >> "$GITHUB_ENV"
+      - name: Cache Node.js
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-node-${{ env.NODE_VERSION }}
+          path: |
+            ${{ env.NVM_DIR }}
+
+      - name: Install Dependencies
+        id: install-dependencies
+        run: |
+          source ~/.nvm/nvm.sh
+          nvm install "$NODE_VERSION"
+          nvm alias default "$NODE_VERSION"
+          echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
+          echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> $GITHUB_OUTPUT
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          key: ${{ runner.os }}-${{ hashFiles('**/yarn.lock') }}
+          path: |
+            **/node_modules
+            **/.yarn
+            ${{ steps.install-dependencies.outputs.NPM_CACHE_DIR }}
+            ${{ steps.install-dependencies.outputs.NPM_GLOBAL_CACHE_DIR }}
+
+      - name: Update Branch
+        if: ${{ inputs.merge-default-branch }}
+        env:
+          CURRENT_BRANCH: ${{ inputs.branch }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          compare_result=$(curl -L -s --fail-with-body \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "https://api.github.com/repos/$REPOSITORY/compare/$DEFAULT_BRANCH...$CURRENT_BRANCH")
+          behind_by=$(echo "$compare_result" | jq '.behind_by')
+          ahead_by=$(echo "$compare_result" | jq '.ahead_by')
+          if [ "$behind_by" -le 0 ] ; then
+            echo '- Skipping merge. Up-to-date with default branch.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 0
+          else
+            echo '- Merging default branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
+          git fetch origin "$CURRENT_BRANCH" --depth=$((ahead_by + 1))
+          git fetch origin "$DEFAULT_BRANCH" --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
+          exit_code=0
+          merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
+          if [ "$exit_code" -eq 0 ] ; then
+            exit 0
+          elif echo $merge_conflicts | grep -v ^tgui/public/ ; then
+            echo '- Automatic merge failed. Non-tgui bundle files have conflicts.' | tee -a "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+
+      - name: Build /tg/ui
+        run: |
+          source ~/.nvm/nvm.sh
+          nvm use default
+          (cd tgui && bin/tgui --mode=production)
+
+      - name: Commit and Push
+        run: |
+          if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
+            echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            git add --all
+            git commit -m "Build and update tgui"
+            git push
+            echo '- Built, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
+          fi
