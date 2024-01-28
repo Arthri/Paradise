@@ -32,9 +32,12 @@ jobs:
           ref: ${{ inputs.branch }}
 
       - name: Setup Git User
+        env:
+          EMAIL: ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
+          USERNAME: ${{ vars.GIT_USERNAME || '/tg/ui Builder' }}
         run: |
-          git config --global user.email ${{ vars.GIT_EMAIL || '41898282+github-actions[bot]@users.noreply.github.com' }}
-          git config --global user.name ${{ vars.GIT_USERNAME || '/tg/ui Builder' }}
+          git config --global user.email "$EMAIL"
+          git config --global user.name "$USERNAME"
 
       - name: Get Information from Node Version Manager
         run: |
