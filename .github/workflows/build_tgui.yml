@@ -1,11 +1,5 @@
 name: Build /tg/ui
 on:
-  # Push once to bootstrap-tgui-builder to make GitHub recognize the workflow.
-  # Subsequent runs can be scheduled using the Actions tab or the GitHub CLI.
-  push:
-    branches:
-      - bootstrap-tgui-builder
-
   workflow_dispatch:
     inputs:
       repository:
