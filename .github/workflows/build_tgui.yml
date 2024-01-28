@@ -2,10 +2,6 @@ name: Build /tg/ui
 on:
   workflow_dispatch:
     inputs:
-      repository:
-        description: The repository to check out.
-        required: false
-        type: string
       branch:
         description: The branch in the repository to check out.
         required: true
@@ -17,7 +13,7 @@ on:
         type: boolean
 
 env:
-  DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+  DEFAULT_BRANCH: ${{ vars.DEFAULT_BRANCH || github.event.repository.default_branch }}
   NODE_MAJOR_VERSION: 20
 
 jobs:
