@@ -84,7 +84,7 @@ jobs:
             echo '- Skipping merge. Up-to-date with default branch.' | tee -a "$GITHUB_STEP_SUMMARY"
             exit 0
           else
-            echo '- Merging default branch. HEAD branch is behind by '"$behind_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
+            echo '- Merging default branch. HEAD branch is behind by '"$behind_by"' commits and ahead by '"$ahead_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
           git fetch origin "$CURRENT_BRANCH" --depth=$((ahead_by + 1))
           git fetch origin "$DEFAULT_BRANCH" --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
