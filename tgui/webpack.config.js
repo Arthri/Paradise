@@ -130,6 +130,7 @@ module.exports = (env = {}, argv) => {
         css: true,
       }),
     ];
+    config.devtool = 'hidden-source-map';
   }
 
   // Development build specific options
