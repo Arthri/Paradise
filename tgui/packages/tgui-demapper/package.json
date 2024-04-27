@@ -1,0 +1,12 @@
+{
+  "private": true,
+  "name": "tgui-demapper",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node --require ../../.pnp.cjs --experimental-modules ./demap.js"
+  },
+  "dependencies": {
+    "source-map": "^0.7.4"
+  }
+}

@@ -8096,6 +8096,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tgui-demapper@workspace:packages/tgui-demapper":
+  version: 0.0.0-use.local
+  resolution: "tgui-demapper@workspace:packages/tgui-demapper"
+  dependencies:
+    source-map: "npm:^0.7.4"
+  languageName: unknown
+  linkType: soft
+
 "tgui-dev-server@workspace:*, tgui-dev-server@workspace:packages/tgui-dev-server":
   version: 0.0.0-use.local
   resolution: "tgui-dev-server@workspace:packages/tgui-dev-server"
