@@ -11,6 +11,11 @@ on:
         description: If checked or set to true, the default branch(usually main or master) will be merged into the current branch before building.
         required: false
         type: boolean
+      create-pull-request:
+        default: true
+        description: If checked or set to true, then the updates will be put into a pull request. Otherwise, the updates will be pushed directly to the branch.
+        required: false
+        type: boolean
       upstream-repository:
         description: The upstream repository.
         required: false
@@ -23,6 +28,7 @@ on:
         default: master
 
 env:
+  CREATE_PULL_REQUEST: ${{ inputs.create-pull-request }}
   HEAD_BRANCH: ${{ inputs.branch }}
   NODE_MAJOR_VERSION: 20
   UPSTREAM: ${{ vars.UPSTREAM_REPOSITORY || inputs.upstream-repository }}
@@ -129,7 +135,11 @@ jobs:
           else
             git add --all
             git commit -m "Build and update tgui"
-            git push --force -u origin HEAD:$TGUI_UPDATE_BRANCH
-            gh pr create -t "Merge upstream into $HEAD_BRANCH and/or rebuild /tg/ui" -b "" -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
+            if $CREATE_PULL_REQUEST; then
+              git push --force -u origin HEAD:$TGUI_UPDATE_BRANCH
+              gh pr create -t "Merge upstream into $HEAD_BRANCH and/or rebuild /tg/ui" -b "" -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
+            else
+              git push
+            fi
             echo '- Built, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
