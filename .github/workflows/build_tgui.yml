@@ -23,6 +23,7 @@ on:
         default: master
 
 env:
+  HEAD_BRANCH: ${{ inputs.branch }}
   NODE_MAJOR_VERSION: 20
   UPSTREAM: ${{ vars.UPSTREAM_REPOSITORY || inputs.upstream-repository }}
   UPSTREAM_BRANCH: ${{ vars.UPSTREAM_BRANCH || inputs.upstream-branch }}
@@ -35,12 +36,13 @@ jobs:
 
     permissions:
       contents: write
+      pull-requests: write
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ inputs.branch }}
+          ref: ${{ env.HEAD_BRANCH }}
 
       - name: Setup Git User
         env:
@@ -83,13 +85,12 @@ jobs:
       - name: Update Branch
         if: ${{ inputs.merge-default-branch }}
         env:
-          CURRENT_BRANCH: ${{ inputs.branch }}
           REPOSITORY: ${{ github.repository }}
         run: |
           compare_result=$(curl -L -s --fail-with-body \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$REPOSITORY/compare/${UPSTREAM%%/*}:$UPSTREAM_BRANCH...$CURRENT_BRANCH")
+            "https://api.github.com/repos/$REPOSITORY/compare/${UPSTREAM%%/*}:$UPSTREAM_BRANCH...$HEAD_BRANCH")
           # Assign multiple variables with one jq execution
           if IFS=$'\n' read -d '' -r behind_by ahead_by <<<$(jq '.behind_by, .ahead_by' <<<$compare_result) ; [ -z "$behind_by" ] || [ -z "$ahead_by" ] ; then
             echo '- Unable to determine the distance between the HEAD branch and the default branch.' | tee -a "$GITHUB_STEP_SUMMARY"
@@ -101,7 +102,7 @@ jobs:
           else
             echo '- Merging default branch. HEAD branch is behind by '"$behind_by"' commits and ahead by '"$ahead_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
-          git fetch origin "$CURRENT_BRANCH" --depth=$((ahead_by + 1))
+          git fetch origin "$HEAD_BRANCH" --depth=$((ahead_by + 1))
           git fetch 'https://github.com/'"$UPSTREAM"'.git' "$UPSTREAM_BRANCH" --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
           exit_code=0
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
@@ -119,12 +120,16 @@ jobs:
           (cd tgui && bin/tgui --mode=production)
 
       - name: Commit and Push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TGUI_UPDATE_BRANCH: tgui/${{ env.HEAD_BRANCH }}
         run: |
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
             echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
             git add --all
             git commit -m "Build and update tgui"
-            git push
+            git push -u origin HEAD:$TGUI_UPDATE_BRANCH
+            gh pr create -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
             echo '- Built, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
