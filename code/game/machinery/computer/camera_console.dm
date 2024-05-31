@@ -92,11 +92,11 @@
 
 /obj/machinery/computer/security/ui_data()
 	. = list()
-	.["activeCamera"] = active_camera ? null : list(
+	.["activeCamera"] = active_camera ? list(
 		name = active_camera.c_tag,
 		status = active_camera.status,
 		uid = active_camera.UID(),
-	)
+	) : null
 
 /obj/machinery/computer/security/ui_static_data()
 	. = list()
