@@ -25,8 +25,10 @@ const prevNextCamera = (areas: Area[], activeCamera: ActiveCamera) => {
   if (!activeCamera) {
     return [];
   }
-  const cameras = areas.flat();
-  const index = cameras.findIndex((camera) => camera === activeCamera.name);
+  const cameras = areas.map(([, cameras]) => cameras).flat();
+  const index = cameras.findIndex(
+    (camera) => camera.name === activeCamera.name
+  );
   return [cameras[index - 1], cameras[index + 1]];
 };
 
@@ -36,13 +38,13 @@ const prevNextCamera = (areas: Area[], activeCamera: ActiveCamera) => {
  * Filters cameras, applies search terms and sorts the alphabetically.
  */
 const selectCameras = (areas: Area[], searchText = ''): Area[] => {
-  const testSearch = searchText ? createSearch(searchText, null) : null;
+  const testSearch = searchText
+    ? createSearch<Camera>(searchText, (camera) => camera.name)
+    : null;
   return sortBy(([area]) => area)(
     areas
       .map(([area, cameras]) => {
-        let queriedCameras = cameras.filter(
-          (camera) => camera !== undefined && camera !== null
-        );
+        let queriedCameras = cameras;
         if (searchText) {
           queriedCameras = queriedCameras.filter(testSearch);
         }
@@ -54,10 +56,16 @@ const selectCameras = (areas: Area[], searchText = ''): Area[] => {
 
 type ActiveCamera = {
   name: string;
+  uid: string;
   status: BooleanLike;
 };
 
-type Area = [areaName: string, cameras: string[]];
+type Camera = {
+  name: string;
+  uid: string;
+};
+
+type Area = [areaName: string, cameras: Camera[]];
 
 type Data = {
   mapRef: string;
@@ -146,24 +154,24 @@ export const CameraConsoleContent = (props: {}, context) => {
                  * Apparently they're faster but I've not noticed a difference
                  */
                 <div
-                  key={camera}
-                  title={camera}
+                  key={camera.uid}
+                  title={camera.uid}
                   className={classes([
                     'Button',
                     'Button--fluid',
                     'Button--color--transparent',
                     activeCamera &&
-                      camera === activeCamera.name &&
+                      camera.uid === activeCamera.uid &&
                       'Button--selected',
                     'CameraButton',
                   ])}
                   onClick={() =>
                     act('switch_camera', {
-                      name: camera,
+                      uid: camera.uid,
                     })
                   }
                 >
-                  <Icon name="video" /> {trimLongStr(camera, 23)}
+                  <Icon name="video" /> {trimLongStr(camera.name, 23)}
                 </div>
               ));
               if (cameras.length <= 1) {

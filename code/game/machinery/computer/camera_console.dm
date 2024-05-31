@@ -95,6 +95,7 @@
 	.["activeCamera"] = active_camera ? null : list(
 		name = active_camera.c_tag,
 		status = active_camera.status,
+		uid = active_camera.UID(),
 	)
 
 /obj/machinery/computer/security/ui_static_data()
@@ -104,17 +105,24 @@
 	.["areas"] = list()
 	for(var/area in areas)
 		var/list/area_data = list()
+		// Use a list instead of an object, because it's easier to
+		// filter and sort. Saves on render time
 		.["areas"] += list(area, area_data)
 		for(var/obj/machinery/camera/C in areas[area])
-			area_data += list(C.c_tag)
+			if(isnull(C.c_tag))
+				continue
+			area_data += list(list(
+				name = C.c_tag,
+				uid = C.UID(),
+			))
 
 /obj/machinery/computer/security/ui_act(action, params)
 	if(..())
 		return
 
 	if(action == "switch_camera")
-		var/c_tag = params["name"]
-		var/obj/machinery/camera/C = find_camera_with_tag(c_tag)
+		var/uid = params["uid"]
+		var/obj/machinery/camera/C = locateUID(uid)
 		active_camera = C
 		if(!silent_console)
 			playsound(src, get_sfx("terminal_type"), 25, FALSE)
