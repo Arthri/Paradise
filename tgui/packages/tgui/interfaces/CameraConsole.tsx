@@ -77,17 +77,15 @@ type Data = {
 export const CameraConsole = (props: {}, context) => {
   const { act, data } = useBackend<Data>(context);
   const { mapRef, activeCamera } = data;
-  const cameras = selectCameras(data.areas);
-  const [prevCameraName, nextCameraName] = prevNextCamera(
-    cameras,
-    activeCamera
-  );
+  const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
+  const areas = selectCameras(data.areas, searchText);
+  const [prevCameraName, nextCameraName] = prevNextCamera(areas, activeCamera);
   return (
     <Window width={900} height={708}>
       <div className="CameraConsole__left">
         <Window.Content>
           <Stack fill vertical>
-            <CameraConsoleContent />
+            <CameraConsoleContent areas={areas} setSearchText={setSearchText} />
           </Stack>
         </Window.Content>
       </div>
@@ -128,11 +126,15 @@ export const CameraConsole = (props: {}, context) => {
   );
 };
 
-export const CameraConsoleContent = (props: {}, context) => {
+export const CameraConsoleContent = (
+  {
+    areas,
+    setSearchText,
+  }: { areas: Area[]; setSearchText: (nextState: string) => void },
+  context
+) => {
   const { act, data } = useBackend<Data>(context);
-  const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
   const { activeCamera } = data;
-  const areas = selectCameras(data.areas, searchText);
   return (
     <Stack fill vertical>
       <Stack.Item>
