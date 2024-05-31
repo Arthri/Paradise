@@ -11,9 +11,21 @@ on:
         description: If checked or set to true, the default branch(usually main or master) will be merged into the current branch before building.
         required: false
         type: boolean
+      upstream-repository:
+        description: The upstream repository.
+        required: false
+        type: string
+        default: ParadiseSS13/Paradise
+      upstream-branch:
+        description: The upstream branch to pull changes from.
+        required: false
+        type: string
+        default: master
 
 env:
   NODE_MAJOR_VERSION: 20
+  UPSTREAM: ${{ vars.UPSTREAM_REPOSITORY || inputs.upstream-repository }}
+  UPSTREAM_BRANCH: ${{ vars.UPSTREAM_BRANCH || inputs.upstream-branch }}
 
 jobs:
   build-tgui:
@@ -73,13 +85,11 @@ jobs:
         env:
           CURRENT_BRANCH: ${{ inputs.branch }}
           REPOSITORY: ${{ github.repository }}
-          UPSTREAM_DEFAULT: ${{ github.event.repository.parent.default_branch }}
-          UPSTREAM_URL: ${{ github.event.repository.parent.git_url }}
         run: |
           compare_result=$(curl -L -s --fail-with-body \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            "https://api.github.com/repos/$REPOSITORY/compare/$UPSTREAM:$UPSTREAM_DEFAULT...$CURRENT_BRANCH")
+            "https://api.github.com/repos/$REPOSITORY/compare/${UPSTREAM%%/*}:$UPSTREAM_BRANCH...$CURRENT_BRANCH")
           # Assign multiple variables with one jq execution
           if IFS=$'\n' read -d '' -r behind_by ahead_by <<<$(jq '.behind_by, .ahead_by' <<<$compare_result) ; [ -z "$behind_by" ] || [ -z "$ahead_by" ] ; then
             echo '- Unable to determine the distance between the HEAD branch and the default branch.' | tee -a "$GITHUB_STEP_SUMMARY"
@@ -91,9 +101,8 @@ jobs:
           else
             echo '- Merging default branch. HEAD branch is behind by '"$behind_by"' commits and ahead by '"$ahead_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
-          git remote add upstream $UPSTREAM_URL
           git fetch origin "$CURRENT_BRANCH" --depth=$((ahead_by + 1))
-          git fetch upstream "$UPSTREAM_DEFAULT" --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
+          git fetch "git@github.com:$UPSTREAM.git" "$UPSTREAM_BRANCH" --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
           exit_code=0
           merge_conflicts=$(git diff --name-only --diff-filter=U --exit-code) || exit_code=$?
           if [ "$exit_code" -eq 0 ] ; then
