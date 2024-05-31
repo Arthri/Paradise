@@ -13,11 +13,12 @@
 
 /obj/structure/fermenting_barrel/Initialize()
 	create_reagents(300) //Bluespace beakers, but without the portability or efficiency in circuits.
+	AddComponent(/datum/component/debris, DEBRIS_WOOD, -20, 10)
 	. = ..()
 
 /obj/structure/fermenting_barrel/examine(mob/user)
 	. = ..()
-	. += "<span class='notice'>It is currently [open ? "open, letting you pour liquids in." : "closed, letting you draw liquids from the tap."] </span>"
+	. += "<span class='notice'>It is currently [open ? "open, letting you pour liquids in." : "closed, letting you draw liquids from the tap."]</span>"
 
 /obj/structure/fermenting_barrel/proc/makeWine(obj/item/food/snacks/grown/G)
 	if(G.reagents)
