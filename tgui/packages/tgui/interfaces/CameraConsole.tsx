@@ -157,7 +157,7 @@ export const CameraConsoleContent = (
                  */
                 <div
                   key={camera.uid}
-                  title={camera.uid}
+                  title={camera.name}
                   className={classes([
                     'Button',
                     'Button--fluid',
