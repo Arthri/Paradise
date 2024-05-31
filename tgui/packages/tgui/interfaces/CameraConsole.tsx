@@ -48,7 +48,7 @@ const selectCameras = (areas: Area[], searchText = ''): Area[] => {
         if (searchText) {
           queriedCameras = queriedCameras.filter(testSearch);
         }
-        return [area, queriedCameras.sort()];
+        return [area, sortBy((camera) => camera.name, queriedCameras)];
       })
       .filter(([, cameras]) => cameras.length > 0)
   );
