@@ -129,7 +129,7 @@ jobs:
           else
             git add --all
             git commit -m "Build and update tgui"
-            git push -u origin HEAD:$TGUI_UPDATE_BRANCH
+            git push --force -u origin HEAD:$TGUI_UPDATE_BRANCH
             gh pr create -t "Merge upstream into $HEAD_BRANCH and/or rebuild /tg/ui" -b "" -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
             echo '- Built, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
