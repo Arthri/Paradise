@@ -107,7 +107,7 @@
 		var/list/area_data = list()
 		// Use a list instead of an object, because it's easier to
 		// filter and sort. Saves on render time
-		.["areas"] += list(area, area_data)
+		.["areas"] += list(list(area, area_data))
 		for(var/obj/machinery/camera/C in areas[area])
 			if(isnull(C.c_tag))
 				continue
