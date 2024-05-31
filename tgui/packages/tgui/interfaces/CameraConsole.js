@@ -3,8 +3,9 @@ import { flow } from 'common/fp';
 import { classes } from 'common/react';
 import { createSearch } from 'common/string';
 import { useBackend, useLocalState } from '../backend';
-import { Button, ByondUi, Input, Section, Stack } from '../components';
+import { Button, ByondUi, Icon, Input, Section, Stack } from '../components';
 import { Window } from '../layouts';
+import { Tree } from '../components/Tree';
 
 /**
  * A crutch which, after selecting a camera in the list,
@@ -12,6 +13,7 @@ import { Window } from '../layouts';
  * as the focus does not shift to the button using overflow.
  * Please, delete that shit if there's a better way.
  */
+// Remove this in 516 and use text-overflow
 String.prototype.trimLongStr = function (length) {
   return this.length > length ? this.substring(0, length) + '...' : this;
 };
@@ -36,15 +38,20 @@ const prevNextCamera = (cameras, activeCamera) => {
  * Filters cameras, applies search terms and sorts the alphabetically.
  */
 const selectCameras = (cameras, searchText = '') => {
-  const testSearch = createSearch(searchText, (camera) => camera.name);
-  return flow([
-    // Null camera filter
-    filter((camera) => camera?.name),
-    // Optional search term
-    searchText && filter(testSearch),
-    // Slightly expensive, but way better than sorting in BYOND
-    sortBy((camera) => camera.name),
-  ])(cameras);
+  const testSearch = searchText ? createSearch(searchText) : null;
+  return sortBy(([area, cameras]) => area)(
+    Object.entries(cameras)
+      .map(([area, cameras]) => {
+        let queriedCameras = cameras.filter(
+          (camera) => camera !== undefined && camera !== null
+        );
+        if (searchText) {
+          queriedCameras = queriedCameras.filter(testSearch);
+        }
+        return [area, queriedCameras.sort()];
+      })
+      .filter(([area, cameras]) => cameras.length > 0)
+  );
 };
 
 export const CameraConsole = (props, context) => {
@@ -56,7 +63,7 @@ export const CameraConsole = (props, context) => {
     activeCamera
   );
   return (
-    <Window width={870} height={708}>
+    <Window width={900} height={708}>
       <div className="CameraConsole__left">
         <Window.Content>
           <Stack fill vertical>
@@ -117,29 +124,47 @@ export const CameraConsoleContent = (props, context) => {
       </Stack.Item>
       <Stack.Item grow m={0}>
         <Section fill scrollable>
-          {cameras.map((camera) => (
-            // We're not using the component here because performance
-            // would be absolutely abysmal (50+ ms for each re-render).
-            <div
-              key={camera.name}
-              title={camera.name}
-              className={classes([
-                'Button',
-                'Button--fluid',
-                'Button--color--transparent',
-                activeCamera &&
-                  camera.name === activeCamera.name &&
-                  'Button--selected',
-              ])}
-              onClick={() =>
-                act('switch_camera', {
-                  name: camera.name,
-                })
+          <Tree>
+            {cameras.map(([area, cameras]) => {
+              const leaves = cameras.map((camera) => (
+                // We're not using the component here because performance
+                // would be absolutely abysmal (50+ ms for each re-render).
+                /* cdui: the above comment is from stylemistake
+                 * https://github.com/tgstation/tgstation/commit/97c90932e1ce5892b9d3c6de008380c980752935
+                 * Apparently they're faster but I've not noticed a difference
+                 */
+                <div
+                  key={camera}
+                  title={camera}
+                  className={classes([
+                    'Button',
+                    'Button--fluid',
+                    'Button--color--transparent',
+                    activeCamera &&
+                      camera === activeCamera.name &&
+                      'Button--selected',
+                    'CameraButton',
+                  ])}
+                  onClick={() =>
+                    act('switch_camera', {
+                      name: camera,
+                    })
+                  }
+                >
+                  <Icon name="video" /> {camera.trimLongStr(23)}
+                </div>
+              ));
+              if (cameras.length <= 1) {
+                return leaves;
+              } else {
+                return (
+                  <Tree.Branch key={area} content={area.trimLongStr(25)}>
+                    {leaves}
+                  </Tree.Branch>
+                );
               }
-            >
-              {camera.name.trimLongStr(23)}
-            </div>
-          ))}
+            })}
+          </Tree>
         </Section>
       </Stack.Item>
     </Stack>

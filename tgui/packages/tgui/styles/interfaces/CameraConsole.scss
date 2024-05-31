@@ -7,14 +7,14 @@ $background-color: rgba(0, 0, 0, 0.33) !default;
   top: 0;
   bottom: 0;
   left: 0;
-  width: base.em(220px);
+  width: base.em(250px);
 }
 
 .CameraConsole__right {
   position: absolute;
   top: 0;
   bottom: 0;
-  left: base.em(220px);
+  left: base.em(250px);
   right: 0;
   background-color: $background-color;
 }
@@ -50,4 +50,11 @@ $background-color: rgba(0, 0, 0, 0.33) !default;
   .NoticeBox {
     margin-top: calc(50% - 2em);
   }
+}
+
+.CameraButton .Icon {
+  margin-left: -0.25em;
+  margin-right: 0;
+  min-width: 1.333em;
+  text-align: center;
 }

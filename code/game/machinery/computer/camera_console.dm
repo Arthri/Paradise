@@ -106,11 +106,11 @@
 	data["mapRef"] = map_name
 	var/list/cameras = get_available_cameras()
 	data["cameras"] = list()
-	for(var/i in cameras)
-		var/obj/machinery/camera/C = cameras[i]
-		data["cameras"] += list(list(
-			name = C.c_tag,
-		))
+	for(var/area in cameras)
+		var/list/area_data = list()
+		data["cameras"][area] = area_data
+		for(var/obj/machinery/camera/C in cameras[area])
+			area_data += list(C.c_tag)
 	return data
 
 
@@ -120,8 +120,7 @@
 
 	if(action == "switch_camera")
 		var/c_tag = params["name"]
-		var/list/cameras = get_available_cameras()
-		var/obj/machinery/camera/C = cameras[c_tag]
+		var/obj/machinery/camera/C = find_camera_with_tag(c_tag)
 		active_camera = C
 		if(!silent_console)
 			playsound(src, get_sfx("terminal_type"), 25, FALSE)
@@ -145,25 +144,33 @@
 
 		return TRUE
 
+/obj/machinery/computer/security/proc/is_camera_available(obj/machinery/camera/C)
+	if((is_away_level(z) || is_away_level(C.z)) && (C.z != z))//if on away mission, can only receive feed from same z_level cameras
+		return FALSE
+	if(!C.network)
+		stack_trace("Camera in a cameranet has no camera network")
+		return FALSE
+	if(!(islist(C.network)))
+		stack_trace("Camera in a cameranet has a non-list camera network")
+		return FALSE
+	if(!length(C.network & network))
+		return FALSE
+	return TRUE
+
 // Returns the list of cameras accessible from this computer
 /obj/machinery/computer/security/proc/get_available_cameras()
-	var/list/L = list()
-	for(var/obj/machinery/camera/C in GLOB.cameranet.cameras)
-		if((is_away_level(z) || is_away_level(C.z)) && (C.z != z))//if on away mission, can only receive feed from same z_level cameras
-			continue
-		L.Add(C)
 	var/list/D = list()
-	for(var/obj/machinery/camera/C in L)
-		if(!C.network)
-			stack_trace("Camera in a cameranet has no camera network")
-			continue
-		if(!(islist(C.network)))
-			stack_trace("Camera in a cameranet has a non-list camera network")
-			continue
-		var/list/tempnetwork = C.network & network
-		if(length(tempnetwork))
-			D["[C.c_tag]"] = C
+	for(var/obj/machinery/camera/C in GLOB.cameranet.cameras)
+		if(is_camera_available(C))
+			var/obj/machinery/camera/camera_area = get_area(C)
+			D[camera_area.name] += list(C)
 	return D
+
+/obj/machinery/computer/security/proc/find_camera_with_tag(c_tag)
+	for(var/obj/machinery/camera/C in GLOB.cameranet.cameras)
+		if(is_camera_available(C) && C.c_tag == c_tag)
+			return C
+	return null
 
 /obj/machinery/computer/security/attack_hand(mob/user)
 	if(stat || ..())
