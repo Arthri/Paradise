@@ -1,6 +1,5 @@
-import { filter, sortBy } from 'common/collections';
-import { flow } from 'common/fp';
-import { classes } from 'common/react';
+import { sortBy } from 'common/collections';
+import { BooleanLike, classes } from 'common/react';
 import { createSearch } from 'common/string';
 import { useBackend, useLocalState } from '../backend';
 import { Button, ByondUi, Icon, Input, Section, Stack } from '../components';
@@ -14,22 +13,21 @@ import { Tree } from '../components/Tree';
  * Please, delete that shit if there's a better way.
  */
 // Remove this in 516 and use text-overflow
-String.prototype.trimLongStr = function (length) {
-  return this.length > length ? this.substring(0, length) + '...' : this;
+const trimLongStr = (str: string, length: number) => {
+  return str.length > length ? str.substring(0, length) + '...' : str;
 };
 
 /**
  * Returns previous and next camera names relative to the currently
  * active camera.
  */
-const prevNextCamera = (cameras, activeCamera) => {
+const prevNextCamera = (areas: Area[], activeCamera: ActiveCamera) => {
   if (!activeCamera) {
     return [];
   }
-  const index = cameras.findIndex(
-    (camera) => camera.name === activeCamera.name
-  );
-  return [cameras[index - 1]?.name, cameras[index + 1]?.name];
+  const cameras = areas.flat();
+  const index = cameras.findIndex((camera) => camera === activeCamera.name);
+  return [cameras[index - 1], cameras[index + 1]];
 };
 
 /**
@@ -37,10 +35,10 @@ const prevNextCamera = (cameras, activeCamera) => {
  *
  * Filters cameras, applies search terms and sorts the alphabetically.
  */
-const selectCameras = (cameras, searchText = '') => {
-  const testSearch = searchText ? createSearch(searchText) : null;
-  return sortBy(([area, cameras]) => area)(
-    Object.entries(cameras)
+const selectCameras = (areas: Area[], searchText = ''): Area[] => {
+  const testSearch = searchText ? createSearch(searchText, null) : null;
+  return sortBy(([area]) => area)(
+    areas
       .map(([area, cameras]) => {
         let queriedCameras = cameras.filter(
           (camera) => camera !== undefined && camera !== null
@@ -50,14 +48,28 @@ const selectCameras = (cameras, searchText = '') => {
         }
         return [area, queriedCameras.sort()];
       })
-      .filter(([area, cameras]) => cameras.length > 0)
+      .filter(([, cameras]) => cameras.length > 0)
   );
 };
 
-export const CameraConsole = (props, context) => {
-  const { act, data, config } = useBackend(context);
+type ActiveCamera = {
+  name: string;
+  status: BooleanLike;
+};
+
+type Area = [areaName: string, cameras: string[]];
+
+type Data = {
+  mapRef: string;
+  areas: Area[];
+} & {
+  activeCamera?: ActiveCamera;
+};
+
+export const CameraConsole = (props: {}, context) => {
+  const { act, data } = useBackend<Data>(context);
   const { mapRef, activeCamera } = data;
-  const cameras = selectCameras(data.cameras);
+  const cameras = selectCameras(data.areas);
   const [prevCameraName, nextCameraName] = prevNextCamera(
     cameras,
     activeCamera
@@ -108,11 +120,11 @@ export const CameraConsole = (props, context) => {
   );
 };
 
-export const CameraConsoleContent = (props, context) => {
-  const { act, data } = useBackend(context);
+export const CameraConsoleContent = (props: {}, context) => {
+  const { act, data } = useBackend<Data>(context);
   const [searchText, setSearchText] = useLocalState(context, 'searchText', '');
   const { activeCamera } = data;
-  const cameras = selectCameras(data.cameras, searchText);
+  const areas = selectCameras(data.areas, searchText);
   return (
     <Stack fill vertical>
       <Stack.Item>
@@ -125,7 +137,7 @@ export const CameraConsoleContent = (props, context) => {
       <Stack.Item grow m={0}>
         <Section fill scrollable>
           <Tree>
-            {cameras.map(([area, cameras]) => {
+            {areas.map(([area, cameras]) => {
               const leaves = cameras.map((camera) => (
                 // We're not using the component here because performance
                 // would be absolutely abysmal (50+ ms for each re-render).
@@ -151,14 +163,14 @@ export const CameraConsoleContent = (props, context) => {
                     })
                   }
                 >
-                  <Icon name="video" /> {camera.trimLongStr(23)}
+                  <Icon name="video" /> {trimLongStr(camera, 23)}
                 </div>
               ));
               if (cameras.length <= 1) {
                 return leaves;
               } else {
                 return (
-                  <Tree.Branch key={area} content={area.trimLongStr(25)}>
+                  <Tree.Branch key={area} content={trimLongStr(area, 25)}>
                     {leaves}
                   </Tree.Branch>
                 );

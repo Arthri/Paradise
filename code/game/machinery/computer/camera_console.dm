@@ -91,28 +91,22 @@
 	user.client.clear_map(map_name)
 
 /obj/machinery/computer/security/ui_data()
-	var/list/data = list()
-	data["network"] = network
-	data["activeCamera"] = null
-	if(active_camera)
-		data["activeCamera"] = list(
-			name = active_camera.c_tag,
-			status = active_camera.status,
-		)
-	return data
+	. = list()
+	.["activeCamera"] = active_camera ? null : list(
+		name = active_camera.c_tag,
+		status = active_camera.status,
+	)
 
 /obj/machinery/computer/security/ui_static_data()
-	var/list/data = list()
-	data["mapRef"] = map_name
-	var/list/cameras = get_available_cameras()
-	data["cameras"] = list()
-	for(var/area in cameras)
+	. = list()
+	.["mapRef"] = map_name
+	var/list/areas = get_available_cameras_by_area()
+	.["areas"] = list()
+	for(var/area in areas)
 		var/list/area_data = list()
-		data["cameras"][area] = area_data
-		for(var/obj/machinery/camera/C in cameras[area])
+		.["areas"] += list(area, area_data)
+		for(var/obj/machinery/camera/C in areas[area])
 			area_data += list(C.c_tag)
-	return data
-
 
 /obj/machinery/computer/security/ui_act(action, params)
 	if(..())
@@ -157,8 +151,10 @@
 		return FALSE
 	return TRUE
 
-// Returns the list of cameras accessible from this computer
-/obj/machinery/computer/security/proc/get_available_cameras()
+// Returns an associated list of accessible cameras from this computer.
+// The key is the name of the area and the value is a list of cameras
+// in that area.
+/obj/machinery/computer/security/proc/get_available_cameras_by_area()
 	var/list/D = list()
 	for(var/obj/machinery/camera/C in GLOB.cameranet.cameras)
 		if(is_camera_available(C))
