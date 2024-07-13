@@ -6,14 +6,19 @@ on:
         description: The branch in the repository to check out.
         required: true
         type: string
-      merge-default-branch:
-        default: true
-        description: If checked or set to true, the default branch(usually main or master) will be merged into the current branch before building.
-        required: false
-        type: boolean
       create-pull-request:
         default: true
         description: If checked or set to true, then the updates will be put into a pull request. Otherwise, the updates will be pushed directly to the branch.
+        required: false
+        type: boolean
+      format:
+        default: true
+        description: If checked or set to true, then tgui formatted after building.
+        required: false
+        type: boolean
+      merge-default-branch:
+        default: true
+        description: If checked or set to true, the default branch(usually main or master) will be merged into the current branch before building.
         required: false
         type: boolean
       upstream-repository:
@@ -124,22 +129,39 @@ jobs:
           source ~/.nvm/nvm.sh
           nvm use default
           (cd tgui && bin/tgui --mode=production)
-
-      - name: Commit and Push
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TGUI_UPDATE_BRANCH: tgui/${{ env.HEAD_BRANCH }}
-        run: |
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
             echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
             git add --all
-            git commit -m "Build and update tgui"
+            git commit -m "Build and update /tg/ui"
+          fi
+
+      - name: Auto-Format
+        if: ${{ inputs.format }}
+        run: |
+          source ~/.nvm/nvm.sh
+          nvm use default
+          (cd tgui && bin/tgui --prettier)
+          if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
+            echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
+          else
+            git add --all
+            git commit -m "Reformat /tg/ui"
+          fi
+
+      - name: Push
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TGUI_UPDATE_BRANCH: tgui/${{ env.HEAD_BRANCH }}
+        run: |
+          if { git diff @{u}..@ --quiet ; } > /dev/null; then
+            echo '- Skipping push. No commits to push.' | tee -a "$GITHUB_STEP_SUMMARY"
+          else
             if $CREATE_PULL_REQUEST; then
               git push --force -u origin HEAD:$TGUI_UPDATE_BRANCH
               gh pr create -t "Merge upstream into $HEAD_BRANCH" -b "" -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
             else
               git push
             fi
-            echo '- Built, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
+            echo '- Built and/or formatted, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
