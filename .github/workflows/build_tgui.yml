@@ -154,7 +154,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TGUI_UPDATE_BRANCH: tgui/${{ env.HEAD_BRANCH }}
         run: |
-          if { git diff @{u}..@ --quiet ; } > /dev/null; then
+          if [ -z "$(git rev-list -1 @{u}..)" ]; then
             echo '- Skipping push. No commits to push.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
             if $CREATE_PULL_REQUEST; then
