@@ -35,7 +35,7 @@ on:
 env:
   CREATE_PULL_REQUEST: ${{ inputs.create-pull-request }}
   HEAD_BRANCH: ${{ inputs.branch }}
-  NODE_MAJOR_VERSION: 20
+  NODE_INSTALL_VERSION: 22.11.0
   UPSTREAM: ${{ vars.UPSTREAM_REPOSITORY || inputs.upstream-repository }}
   UPSTREAM_BRANCH: ${{ vars.UPSTREAM_BRANCH || inputs.upstream-branch }}
 
@@ -67,7 +67,7 @@ jobs:
         run: |
           source ~/.nvm/nvm.sh
           echo 'NVM_DIR='"$NVM_DIR" >> "$GITHUB_ENV"
-          echo 'NODE_VERSION='"$(nvm version-remote $NODE_MAJOR_VERSION)" >> "$GITHUB_ENV"
+          echo 'NODE_VERSION='"$(nvm version-remote $NODE_INSTALL_VERSION)" >> "$GITHUB_ENV"
       - name: Cache Node.js
         uses: actions/cache@v4
         with:
