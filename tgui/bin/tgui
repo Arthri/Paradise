@@ -49,6 +49,13 @@ task-install() {
 task-rspack() {
   cd "${base_dir}"
   yarn run rspack "${@}"
+  # These aren't part of rspack because they do not import
+  # other files, and consequently do not need a bundler.
+  # Furthermore, they are not compiled like the rest of tgui
+  # and therefore integrating it into the rspack configuration
+  # would create a mess.
+  yarn run build:helpers
+  yarn run build:style
 }
 
 ## Runs a development server
