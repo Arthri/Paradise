@@ -52,6 +52,10 @@
 	var/death_cooldown = 0
 	/// If antagbanned people are prevented from using it, only false for the ghost bar spawner.
 	var/restrict_antagban = TRUE
+	/// If people without respawnability are prevented from using it.
+	var/restrict_respawnability = TRUE
+	/// If late-observers with ahud are prevented from using it.
+	var/restrict_ahud = TRUE
 
 /obj/effect/mob_spawn/attack_ghost(mob/user)
 	if(!valid_to_spawn(user))
@@ -107,12 +111,12 @@
 	if((jobban_isbanned(user, ban_type) || (restrict_antagban && jobban_isbanned(user, ROLE_SYNDICATE))))
 		to_chat(user, "<span class='warning'>You are jobanned!</span>")
 		return FALSE
-	if(!HAS_TRAIT(user, TRAIT_RESPAWNABLE))
+	if(!HAS_TRAIT(user, TRAIT_RESPAWNABLE) && restrict_respawnability)
 		to_chat(user, "<span class='warning'>You currently do not have respawnability!</span>")
 		return FALSE
 	if(isobserver(user))
 		var/mob/dead/observer/O = user
-		if(!O.check_ahud_rejoin_eligibility())
+		if(!O.check_ahud_rejoin_eligibility() && restrict_ahud)
 			to_chat(user, "<span class='warning'>Upon using the antagHUD you forfeited the ability to join the round.</span>")
 			return FALSE
 	if(time_check(user))
@@ -762,7 +766,11 @@
 
 /obj/effect/mob_spawn/human/alive/zombie/non_infectious/equip(mob/living/carbon/human/H)
 	ADD_TRAIT(H, TRAIT_NON_INFECTIOUS_ZOMBIE, ROUNDSTART_TRAIT)
-	return ..()
+	. = ..()
+	for(var/datum/disease/zombie/zomb in H.viruses)
+		zomb.spread_flags = SPECIAL
+		zomb.visibility_flags = HIDDEN_PANDEMIC // This is how critical diseases block being interacted by the pandemic or copied. I hate it here.
+
 
 /// these mob spawn subtypes trigger immediately (New or Initialize) and are not player controlled... since they're dead, you know?
 /obj/effect/mob_spawn/corpse
