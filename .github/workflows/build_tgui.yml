@@ -128,7 +128,7 @@ jobs:
         run: |
           source ~/.nvm/nvm.sh
           nvm use default
-          (cd tgui && bin/tgui --mode=production)
+          (cd tgui && bin/tgui --mode=production && yarn run build:helpers && yarn run build:style)
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
             echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
