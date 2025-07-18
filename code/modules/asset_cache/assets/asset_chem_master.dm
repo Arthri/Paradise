@@ -9,6 +9,7 @@
 		Insert("bandaid[bandaid_type]", 'icons/obj/chemical.dmi', "bandaid[bandaid_type]")
 	for(var/bottle_type in list("bottle", "reagent_bottle"))
 		Insert(bottle_type, 'icons/obj/chemical.dmi', bottle_type)
+	Insert("largebottle", 'icons/obj/drinks.dmi', "largebottle")
 
 /datum/asset/spritesheet/chem_master/ModifyInserted(icon/pre_asset)
 	pre_asset.Scale(64, 64)

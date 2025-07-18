@@ -66,6 +66,8 @@
 		production_modes[new_mode.mode_id] = new_mode
 		new_mode = new /datum/chemical_production_mode/bottles()
 		production_modes[new_mode.mode_id] = new_mode
+		new_mode = new /datum/chemical_production_mode/bottles/large()
+		production_modes[new_mode.mode_id] = new_mode
 	if(isnull(production_mode))
 		for(var/key in production_modes)
 			production_mode = key
@@ -650,6 +652,15 @@
 
 /datum/chemical_production_mode/bottles/get_base_placeholder_name(datum/reagents/reagents, amount_per_item)
 	return reagents.get_master_reagent_name()
+
+/datum/chemical_production_mode/bottles/large
+	mode_id = "chem_large_bottles"
+	production_name = "Large Bottles"
+	production_icon = "bottle-water"
+	item_type = /obj/item/reagent_containers/glass/beaker/waterbottle/large/empty
+	sprites = list("largebottle")
+	max_items_amount = 5
+	max_units_per_item = 100
 
 /datum/chemical_production_mode/condiment_bottles
 	mode_id = "condi_bottles"
