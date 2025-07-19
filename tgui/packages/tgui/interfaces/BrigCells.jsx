@@ -30,9 +30,7 @@ const BrigCellsTableRow = (properties) => {
         <TimeDisplay totalSeconds={time_left_seconds} />
       </Table.Cell>
       <Table.Cell>
-        <Button type="button" onClick={release}>
-          Release
-        </Button>
+        <Button onClick={release}>Release</Button>
       </Table.Cell>
     </Table.Row>
   );
