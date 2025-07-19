@@ -123,7 +123,7 @@ const OperatingComputerPatient = (props) => {
         </Section>
       </Stack.Item>
       <Stack.Item>
-        <Section title="Active surgeries" level="2">
+        <Section title="Active surgeries">
           {occupant.inSurgery && !!activeSurgeries ? (
             activeSurgeries.map((s, i) => (
               <Section style={{ textTransform: 'capitalize' }} title={s.name + ' (' + s.location + ')'} key={i}>

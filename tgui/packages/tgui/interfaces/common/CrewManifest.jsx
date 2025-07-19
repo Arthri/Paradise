@@ -88,7 +88,6 @@ export const CrewManifest = (props) => {
             </Box>
           </Box>
         }
-        level={2}
       >
         {ManifestTable(heads)}
       </Section>
@@ -101,7 +100,6 @@ export const CrewManifest = (props) => {
             </Box>
           </Box>
         }
-        level={2}
       >
         {ManifestTable(sec)}
       </Section>
@@ -114,7 +112,6 @@ export const CrewManifest = (props) => {
             </Box>
           </Box>
         }
-        level={2}
       >
         {ManifestTable(eng)}
       </Section>
@@ -127,7 +124,6 @@ export const CrewManifest = (props) => {
             </Box>
           </Box>
         }
-        level={2}
       >
         {ManifestTable(med)}
       </Section>
@@ -140,7 +136,6 @@ export const CrewManifest = (props) => {
             </Box>
           </Box>
         }
-        level={2}
       >
         {ManifestTable(sci)}
       </Section>
@@ -153,7 +148,6 @@ export const CrewManifest = (props) => {
             </Box>
           </Box>
         }
-        level={2}
       >
         {ManifestTable(ser)}
       </Section>
@@ -166,7 +160,6 @@ export const CrewManifest = (props) => {
             </Box>
           </Box>
         }
-        level={2}
       >
         {ManifestTable(sup)}
       </Section>
@@ -179,7 +172,6 @@ export const CrewManifest = (props) => {
             </Box>
           </Box>
         }
-        level={2}
       >
         {ManifestTable(misc)}
       </Section>
