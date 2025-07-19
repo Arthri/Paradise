@@ -15,7 +15,7 @@ export const goonstation_PTL = (props) => {
   const { data } = useBackend();
   const { total_earnings, total_energy, name = 'Power Transmission Laser' } = data;
   return (
-    <Window title="Power Transmission Laser" width="310" height="485">
+    <Window title="Power Transmission Laser" width={310} height={485}>
       <Window.Content>
         <Status />
         <InputControls />

@@ -133,7 +133,7 @@ const HandheldChemDispenserChemicals = (properties) => {
           />
         ))}
         {flexFillers.map((_, i) => (
-          <Stack.Item key={i} grow="1" basis="25%" />
+          <Stack.Item key={i} grow={1} basis="25%" />
         ))}
       </Section>
     </Stack.Item>

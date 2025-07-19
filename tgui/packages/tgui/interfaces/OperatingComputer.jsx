@@ -147,7 +147,7 @@ const OperatingComputerUnoccupied = () => {
   return (
     <Stack fill>
       <Stack.Item grow align="center" textAlign="center" color="label">
-        <Icon name="user-slash" mb="0.5rem" size="5" />
+        <Icon name="user-slash" mb="0.5rem" size={5} />
         <br />
         No patient detected.
       </Stack.Item>

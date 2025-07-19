@@ -210,15 +210,15 @@ export const Alerts = (props) => {
   const { miningPower, stabilizerPower, emagged, safeLevels, autoShutown, stabilizers, overhead } = data;
   return (
     <>
-      {!autoShutown && !emagged && <NoticeBox danger={1}>Auto shutdown disabled</NoticeBox>}
+      {!autoShutown && !emagged && <NoticeBox danger>Auto shutdown disabled</NoticeBox>}
       {emagged ? (
-        <NoticeBox danger={1}>All safeties disabled</NoticeBox>
+        <NoticeBox danger>All safeties disabled</NoticeBox>
       ) : miningPower <= 15000000 ? (
         ''
       ) : !stabilizers ? (
-        <NoticeBox danger={1}>Stabilizers disabled, Instability likely</NoticeBox>
+        <NoticeBox danger>Stabilizers disabled, Instability likely</NoticeBox>
       ) : miningPower > stabilizerPower + 15000000 ? (
-        <NoticeBox danger={1}>Stabilizers overwhelmed, Instability likely</NoticeBox>
+        <NoticeBox danger>Stabilizers overwhelmed, Instability likely</NoticeBox>
       ) : (
         <NoticeBox>High Power, engaging stabilizers</NoticeBox>
       )}

@@ -98,7 +98,7 @@ const CryoContent = (props) => {
           ) : (
             <Stack fill textAlign="center">
               <Stack.Item grow align="center" color="label">
-                <Icon name="user-slash" mb="0.5rem" size="5" />
+                <Icon name="user-slash" mb="0.5rem" size={5} />
                 <br />
                 No occupant detected.
               </Stack.Item>

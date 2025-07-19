@@ -260,7 +260,7 @@ const Queue = (properties) => {
               </Stack.Item>
             )}
             {Object.keys(queueDeficit).length > 0 && (
-              <Stack.Item className="Exofab__queue--deficit" shrink="0">
+              <Stack.Item className="Exofab__queue--deficit" shrink={0}>
                 <Divider />
                 Lacking materials to complete:
                 {queueDeficit.map((kv) => (
@@ -295,7 +295,7 @@ const MaterialCount = (properties) => {
               <Box mt={1} className={classes(['materials32x32', id])} />
             </Button>
           </Stack.Item>
-          <Stack.Item grow="1">
+          <Stack.Item grow={1}>
             <Box className="Exofab__material--name">{id}</Box>
             <Box className="Exofab__material--amount">
               {curAmount.toLocaleString('en-US')} cm³ ({Math.round((curAmount / MINERAL_MATERIAL_AMOUNT) * 10) / 10}{' '}

@@ -16,7 +16,7 @@ export const Safe = (properties) => {
             <Box className="Safe--engraving--hinge" top="25%" />
             <Box className="Safe--engraving--hinge" top="75%" />
           </Box>
-          <Icon className="Safe--engraving--arrow" name="long-arrow-alt-down" size="3" />
+          <Icon className="Safe--engraving--arrow" name="long-arrow-alt-down" size={3} />
           <br />
           {open ? (
             <Contents />

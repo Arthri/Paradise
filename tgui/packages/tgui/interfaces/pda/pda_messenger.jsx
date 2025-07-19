@@ -51,7 +51,7 @@ export const ActiveConversation = (props) => {
             bottom="-4px"
             style={{
               zIndex: '0',
-              transform: im.sent ? 'scale(-1, 1)' : null,
+              transform: im.sent ? 'scale(-1, 1)' : undefined,
             }}
             name="comment"
           />

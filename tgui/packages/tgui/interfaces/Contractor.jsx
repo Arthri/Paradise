@@ -43,7 +43,7 @@ export const Contractor = (properties) => {
   let body;
   if (data.unauthorized) {
     body = (
-      <Flex.Item grow="1" backgroundColor="rgba(0, 0, 0, 0.8)">
+      <Flex.Item grow={1} backgroundColor="rgba(0, 0, 0, 0.8)">
         <FakeTerminal
           height="100%"
           allMessages={['ERROR: UNAUTHORIZED USER']}
@@ -54,7 +54,7 @@ export const Contractor = (properties) => {
     );
   } else if (!data.load_animation_completed) {
     body = (
-      <Flex.Item grow="1" backgroundColor="rgba(0, 0, 0, 0.8)">
+      <Flex.Item grow={1} backgroundColor="rgba(0, 0, 0, 0.8)">
         <FakeTerminal
           height="100%"
           allMessages={terminalMessages}
@@ -72,7 +72,7 @@ export const Contractor = (properties) => {
         <Flex.Item basis="content" mt="0.5rem">
           <Navigation />
         </Flex.Item>
-        <Flex.Item grow="1" overflow="hidden">
+        <Flex.Item grow={1} overflow="hidden">
           {data.page === 1 ? <Contracts height="100%" setViewingPhoto={setViewingPhoto} /> : <Hub height="100%" />}
         </Flex.Item>
       </>
@@ -108,7 +108,7 @@ const Summary = (properties) => {
           <LabeledList>
             <LabeledList.Item label="TC Available" verticalAlign="middle">
               <Flex align="center">
-                <Flex.Item grow="1">{tc_available} TC</Flex.Item>
+                <Flex.Item grow={1}>{tc_available} TC</Flex.Item>
                 <Button
                   disabled={tc_available <= 0}
                   content="Claim"
@@ -204,7 +204,7 @@ const Contracts = (properties) => {
             key={contract.uid}
             title={
               <Flex>
-                <Flex.Item grow="1" color={contract.status === 1 && 'good'}>
+                <Flex.Item grow={1} color={contract.status === 1 && 'good'}>
                   {contract.target_name}
                 </Flex.Item>
                 <Flex.Item basis="content">
@@ -240,7 +240,7 @@ const Contracts = (properties) => {
             }
           >
             <Flex>
-              <Flex.Item grow="2" mr="0.5rem">
+              <Flex.Item grow={2} mr="0.5rem">
                 {contract.fluff_message}
                 {!!contract.completed_time && (
                   <Box color="good">
@@ -312,7 +312,7 @@ const areaArrow = (contract) => {
           color={same_area ? 'green' : 'yellow'}
           rotation={same_area ? null : -rad2deg(Math.atan2(t_coords[1] - c_coords[1], t_coords[0] - c_coords[0]))}
           lineHeight={same_area ? null : '0.85'} // Needed because it jumps upwards otherwise
-          size="1.5"
+          size={1.5}
         />
       </Flex.Item>
     );

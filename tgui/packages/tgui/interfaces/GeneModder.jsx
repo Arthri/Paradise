@@ -45,7 +45,7 @@ const MissingSeed = (props) => {
   return (
     <Section fill height="85%">
       <Stack height="100%">
-        <Stack.Item bold grow="1" textAlign="center" align="center" color="green">
+        <Stack.Item bold grow={1} textAlign="center" align="center" color="green">
           <Icon name="leaf" size={5} mb="10px" />
           <br />
           The plant DNA manipulator is missing a seed.

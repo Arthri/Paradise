@@ -17,7 +17,7 @@ export const PortablePump = (props) => {
             <HoldingTank />
           ) : (
             <Section fill title="Holding Tank">
-              <Box color="average" bold={1} textAlign="center" mt={2.5}>
+              <Box color="average" bold textAlign="center" mt={2.5}>
                 No Holding Tank Inserted.
               </Box>
             </Section>
@@ -74,7 +74,7 @@ const PumpSettings = (props) => {
           </Box>
         </LabeledList.Item>
         <LabeledList.Item label="Port status">
-          <Box color={port_connected ? 'green' : 'average'} bold={1} ml={0.5}>
+          <Box color={port_connected ? 'green' : 'average'} bold ml={0.5}>
             {port_connected ? 'Connected' : 'Disconnected'}
           </Box>
         </LabeledList.Item>

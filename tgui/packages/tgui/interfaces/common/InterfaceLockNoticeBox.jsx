@@ -32,7 +32,7 @@ export const InterfaceLockNoticeBox = (props) => {
       <NoticeBox color={siliconUser && 'grey'}>
         <Flex align="center">
           <Flex.Item>Interface lock status:</Flex.Item>
-          <Flex.Item grow="1" />
+          <Flex.Item grow={1} />
           <Flex.Item>
             <Button
               m="0"

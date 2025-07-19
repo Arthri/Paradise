@@ -33,6 +33,7 @@ const HBC = (role) => {
   if (HeadRoles.indexOf(role) !== -1) {
     return true;
   }
+  return false;
 };
 
 const ManifestTable = (group) => {

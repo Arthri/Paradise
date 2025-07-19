@@ -162,7 +162,7 @@ const MenuButton = (properties) => {
     >
       <Stack.Item>
         {selected && <Box className="Newscaster__menuButton--selectedBar" />}
-        <Icon name={icon} spin={iconSpin} size="2" />
+        <Icon name={icon} spin={iconSpin} size={2} />
       </Stack.Item>
       <Stack.Item className="Newscaster__menuButton--title">{title}</Stack.Item>
       {children}
@@ -203,7 +203,7 @@ const NewscasterFeed = (properties) => {
             .map((story, index) => <Story key={index} story={story} />)
         ) : (
           <Box className="Newscaster__emptyNotice">
-            <Icon name="times" size="3" />
+            <Icon name="times" size={3} />
             <br />
             There are no stories at this time.
           </Box>
@@ -316,7 +316,7 @@ const NewscasterJobs = (properties) => {
             ))
         ) : (
           <Box className="Newscaster__emptyNotice">
-            <Icon name="times" size="3" />
+            <Icon name="times" size={3} />
             <br />
             There are no openings at this time.
           </Box>
@@ -447,7 +447,7 @@ const manageChannelModalBodyOverride = (modal) => {
             <Input
               width="100%"
               placeholder="50 characters max."
-              maxLength="50"
+              maxLength={50}
               value={name}
               onChange={(value) => setName(value)}
             />
@@ -457,14 +457,14 @@ const manageChannelModalBodyOverride = (modal) => {
               multiline
               width="100%"
               placeholder="128 characters max."
-              maxLength="128"
+              maxLength={128}
               value={description}
               onChange={(value) => setDescription(value)}
             />
           </LabeledList.Item>
           <LabeledList.Item label="Icon">
             <Input disabled={!isAdmin} value={icon} width="35%" mr="0.5rem" onChange={(value) => setIcon(value)} />
-            <Icon name={icon} size="2" verticalAlign="middle" mr="0.5rem" />
+            <Icon name={icon} size={2} verticalAlign="middle" mr="0.5rem" />
           </LabeledList.Item>
           <LabeledList.Item label="Accept Public Stories?">
             <Button
@@ -558,7 +558,7 @@ const createStoryModalBodyOverride = (modal) => {
             <Input
               width="100%"
               placeholder="128 characters max."
-              maxLength="128"
+              maxLength={128}
               value={title}
               onChange={(value) => setTitle(value)}
             />
@@ -568,7 +568,7 @@ const createStoryModalBodyOverride = (modal) => {
               fluid
               multiline
               placeholder="1024 characters max."
-              maxLength="1024"
+              maxLength={1024}
               rows="8"
               width="100%"
               value={body}
@@ -655,14 +655,14 @@ const wantedNoticeModalBodyOverride = (modal) => {
             <Input disabled={!isAdmin} width="100%" value={author} onChange={(value) => setAuthor(value)} />
           </LabeledList.Item>
           <LabeledList.Item label="Name">
-            <Input width="100%" value={name} maxLength="128" onChange={(value) => setName(value)} />
+            <Input width="100%" value={name} maxLength={128} onChange={(value) => setName(value)} />
           </LabeledList.Item>
           <LabeledList.Item label="Description" verticalAlign="top">
             <Input
               multiline
               width="100%"
               value={description}
-              maxLength="512"
+              maxLength={512}
               rows="4"
               onChange={(value) => setDescription(value)}
             />

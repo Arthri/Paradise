@@ -69,7 +69,7 @@ const TurnedOff = ({ emp }) => {
       <Box width="100%" height="100%" color="label" textAlign="center">
         <Stack fill>
           <Stack.Item grow align="center" color="label">
-            <Icon name={emp ? 'ban' : 'power-off'} mb="0.5rem" size="5" />
+            <Icon name={emp ? 'ban' : 'power-off'} mb="0.5rem" size={5} />
             <br />
             {emp ? 'ERROR: Device temporarily lost signal.' : 'Device is disabled.'}
           </Stack.Item>

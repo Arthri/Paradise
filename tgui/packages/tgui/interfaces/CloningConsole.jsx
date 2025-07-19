@@ -182,7 +182,7 @@ const CloningConsoleDamage = (props) => {
                           ],
                           good: [0, selected_pod_data['biomass_storage_capacity'] / 3],
                         }}
-                        color={cloning_cost[0] > selected_pod_data['biomass'] ? 'bad' : null}
+                        color={cloning_cost[0] > selected_pod_data['biomass'] ? 'bad' : undefined}
                       >
                         Biomass: {cloning_cost[0]}/{selected_pod_data['biomass']}/
                         {selected_pod_data['biomass_storage_capacity']}

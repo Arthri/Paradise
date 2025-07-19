@@ -22,7 +22,7 @@ export const VolumeMixer = (properties) => {
                     <Button width="24px" color="transparent">
                       <Icon
                         name="volume-off"
-                        size="1.5"
+                        size={1.5}
                         mt="0.1rem"
                         onClick={() => act('volume', { channel: channel.num, volume: 0 })}
                       />
@@ -41,7 +41,7 @@ export const VolumeMixer = (properties) => {
                     <Button width="24px" color="transparent">
                       <Icon
                         name="volume-up"
-                        size="1.5"
+                        size={1.5}
                         mt="0.1rem"
                         onClick={() => act('volume', { channel: channel.num, volume: 100 })}
                       />
