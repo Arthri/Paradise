@@ -378,7 +378,6 @@ type BackendState<TData> = {
       size: [number, number];
       fancy: BooleanLike;
       locked: BooleanLike;
-      scale: BooleanLike;
     };
     client: {
       ckey: string;
@@ -387,8 +386,10 @@ type BackendState<TData> = {
     };
     user: {
       name: string;
-      observer: number;
+      observer: BooleanLike;
     };
+    map: string;
+    ref: string;
   };
   data: TData;
   shared: Record<string, any>;

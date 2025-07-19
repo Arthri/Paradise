@@ -69,7 +69,7 @@ export const Canister = (props) => {
   for (i = 0; i < colorContainer.quart.options.length; i++) {
     array_quart.push(colorContainer.quart.options[i]['name']);
   }
-  let paintSection = '';
+  let paintSection = /** @type {import('react').ReactNode | null} */ (null);
   if (canLabel) {
     paintSection = (
       <Section title="Paint">
