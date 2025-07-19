@@ -72,8 +72,8 @@ const OperatingComputerPatient = (props) => {
             </LabeledList.Item>
             <LabeledList.Item label="Health">
               <ProgressBar
-                min="0"
-                max={occupant.maxHealth}
+                minValue={0}
+                maxValue={occupant.maxHealth}
                 value={occupant.health / occupant.maxHealth}
                 ranges={{
                   good: [0.5, Infinity],
@@ -84,15 +84,15 @@ const OperatingComputerPatient = (props) => {
             </LabeledList.Item>
             {damages.map((d, i) => (
               <LabeledList.Item key={i} label={d[0] + ' Damage'}>
-                <ProgressBar key={i} min="0" max="100" value={occupant[d[1]] / 100} ranges={damageRange}>
+                <ProgressBar key={i} minValue={0} maxValue={100} value={occupant[d[1]] / 100} ranges={damageRange}>
                   {Math.round(occupant[d[1]])}
                 </ProgressBar>
               </LabeledList.Item>
             ))}
             <LabeledList.Item label="Temperature">
               <ProgressBar
-                min="0"
-                max={occupant.maxTemp}
+                minValue={0}
+                maxValue={occupant.maxTemp}
                 value={occupant.bodyTemperature / occupant.maxTemp}
                 color={tempColors[occupant.temperatureSuitability + 3]}
               >
@@ -104,8 +104,8 @@ const OperatingComputerPatient = (props) => {
               <>
                 <LabeledList.Item label="Blood Level">
                   <ProgressBar
-                    min="0"
-                    max={occupant.bloodMax}
+                    minValue={0}
+                    maxValue={occupant.bloodMax}
                     value={occupant.bloodLevel / occupant.bloodMax}
                     ranges={{
                       bad: [-Infinity, 0.6],

@@ -71,8 +71,8 @@ const CryoContent = (props) => {
               <LabeledList.Item label="Occupant">{occupant.name || 'Unknown'}</LabeledList.Item>
               <LabeledList.Item label="Health">
                 <ProgressBar
-                  min={occupant.health}
-                  max={occupant.maxHealth}
+                  minValue={occupant.health}
+                  maxValue={occupant.maxHealth}
                   value={occupant.health / occupant.maxHealth}
                   color={occupant.health > 0 ? 'good' : 'average'}
                 >

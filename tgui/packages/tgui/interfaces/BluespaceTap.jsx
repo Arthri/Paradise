@@ -21,14 +21,13 @@ export const Incursion = (props) => {
   const { portaling } = data;
   if (portaling) {
     return (
-      <Dimmer fontsize="256px" backgroundColor="rgba(35,0,0,0.85)">
+      <Dimmer fontSize="256px" backgroundColor="rgba(35,0,0,0.85)">
         <Blink
-          fontsize="256px"
           interval={Math.random() > 0.25 ? 750 + 400 * Math.random() : 290 + 150 * Math.random()}
           time={60 + 150 * Math.random()}
         >
-          <Stack mb="30px" fontsize="256px">
-            <Stack.Item bold color="red" fontsize="256px" textAlign="center">
+          <Stack mb="30px" fontSize="256px">
+            <Stack.Item bold color="red" fontSize="256px" textAlign="center">
               <Icon name="skull" size={14} mb="64px" />
               <br />
               E$#OR:& U#KN!WN IN%ERF#R_NCE
@@ -123,9 +122,9 @@ export const BluespaceTap = (props) => {
                     <Stack.Item mx={1}>
                       <NumberInput
                         disabled={emagged}
-                        minvalue={0}
+                        minValue={0}
                         value={desiredMiningPower}
-                        maxvalue={Infinity}
+                        maxValue={Infinity}
                         step={1}
                         onChange={(value) =>
                           act('set', {
@@ -162,8 +161,8 @@ export const BluespaceTap = (props) => {
           <Section fill title="Output">
             {dirty ? (
               <Dimmer backgroundColor="rgba(63, 39, 18, 0.85)">
-                <Stack mb="30px" fontsize="256px">
-                  <Stack.Item bold color="brown" fontsize="256px" textAlign="center">
+                <Stack mb="30px" fontSize="256px">
+                  <Stack.Item bold color="brown" fontSize="256px" textAlign="center">
                     Blockage Detected
                     <br />
                     Cleanup Required

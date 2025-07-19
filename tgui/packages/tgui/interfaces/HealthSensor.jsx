@@ -25,7 +25,7 @@ export const HealthSensor = (props) => {
             </LabeledList.Item>
             <LabeledList.Item label="Health activation">
               <NumberInput
-                animate
+                animated
                 step={2}
                 stepPixelSize={6}
                 minValue={minHealth}
