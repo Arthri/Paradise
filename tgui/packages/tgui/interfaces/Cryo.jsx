@@ -71,8 +71,8 @@ const CryoContent = (props) => {
               <LabeledList.Item label="Occupant">{occupant.name || 'Unknown'}</LabeledList.Item>
               <LabeledList.Item label="Health">
                 <ProgressBar
-                  min={occupant.health}
-                  max={occupant.maxHealth}
+                  minValue={occupant.health}
+                  maxValue={occupant.maxHealth}
                   value={occupant.health / occupant.maxHealth}
                   color={occupant.health > 0 ? 'good' : 'average'}
                 >
@@ -98,7 +98,7 @@ const CryoContent = (props) => {
           ) : (
             <Stack fill textAlign="center">
               <Stack.Item grow align="center" color="label">
-                <Icon name="user-slash" mb="0.5rem" size="5" />
+                <Icon name="user-slash" mb="0.5rem" size={5} />
                 <br />
                 No occupant detected.
               </Stack.Item>

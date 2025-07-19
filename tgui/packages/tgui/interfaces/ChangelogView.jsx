@@ -6,7 +6,7 @@ import { Window } from '../layouts';
 
 export const ChangelogView = (props) => {
   const { act, data } = useBackend();
-  const [onlyRecent, showOnlyRecent] = useState(0);
+  const [onlyRecent, showOnlyRecent] = useState(false);
   const { cl_data, last_cl } = data;
 
   const iconMap = {

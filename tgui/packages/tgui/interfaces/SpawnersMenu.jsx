@@ -15,7 +15,6 @@ export const SpawnersMenu = (props) => {
               mb={0.5}
               key={spawner.name}
               title={spawner.name + ' (' + spawner.amount_left + ' left)'}
-              level={2}
               buttons={
                 <>
                   <Button

@@ -12,7 +12,7 @@ export const pai_radio = (props) => {
     <LabeledList>
       <LabeledList.Item label="Frequency">
         <NumberInput
-          animate
+          animated
           step={0.2}
           stepPixelSize={6}
           minValue={minFrequency / 10}

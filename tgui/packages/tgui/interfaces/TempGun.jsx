@@ -16,7 +16,7 @@ export const TempGun = (props) => {
           <LabeledList>
             <LabeledList.Item label="Target Temperature">
               <NumberInput
-                animate
+                animated
                 step={10}
                 stepPixelSize={6}
                 minValue={min_temp}

@@ -140,8 +140,8 @@ const BodyScannerMainOccupant = (props) => {
         <LabeledList.Item label="Name">{occupant.name}</LabeledList.Item>
         <LabeledList.Item label="Health">
           <ProgressBar
-            min="0"
-            max={occupant.maxHealth}
+            minValue={0}
+            maxValue={occupant.maxHealth}
             value={occupant.health / occupant.maxHealth}
             ranges={{
               good: [0.5, Infinity],
@@ -232,8 +232,8 @@ const BodyScannerMainDamage = (props) => {
 const BodyScannerMainDamageBar = (props) => {
   return (
     <ProgressBar
-      min="0"
-      max="100"
+      minValue={0}
+      maxValue={100}
       value={props.value / 100}
       mt="0.5rem"
       mb={!!props.marginBottom && '0.5rem'}
@@ -282,8 +282,8 @@ const BodyScannerMainOrgansExternal = (props) => {
             <Table.Cell textAlign="center">
               <ProgressBar
                 m={-0.5}
-                min="0"
-                max={o.maxHealth}
+                minValue={0}
+                maxValue={o.maxHealth}
                 mt={i > 0 && '0.5rem'}
                 value={o.totalLoss / o.maxHealth}
                 ranges={damageRange}
@@ -372,8 +372,8 @@ const BodyScannerMainOrgansInternal = (props) => {
             </Table.Cell>
             <Table.Cell textAlign="center">
               <ProgressBar
-                min="0"
-                max={o.maxHealth}
+                minValue={0}
+                maxValue={o.maxHealth}
                 value={o.damage / o.maxHealth}
                 mt={i > 0 && '0.5rem'}
                 ranges={damageRange}
@@ -409,7 +409,7 @@ const BodyScannerEmpty = () => {
     <Section fill>
       <Stack fill textAlign="center">
         <Stack.Item grow align="center" color="label">
-          <Icon name="user-slash" mb="0.5rem" size="5" />
+          <Icon name="user-slash" mb="0.5rem" size={5} />
           <br />
           No occupant detected.
         </Stack.Item>

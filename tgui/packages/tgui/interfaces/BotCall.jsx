@@ -80,7 +80,7 @@ const NoBot = (props) => {
   const { act, data } = useBackend();
   return (
     <Stack justify="center" align="center" fill vertical>
-      <Box bold={1} color="bad">
+      <Box bold color="bad">
         No {[props.model]} detected
       </Box>
     </Stack>

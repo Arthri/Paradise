@@ -17,7 +17,7 @@ export const PortableScrubber = (props) => {
             <HoldingTank />
           ) : (
             <Section fill title="Holding Tank">
-              <Box color="average" bold={1} textAlign="center" mt={2.5}>
+              <Box color="average" bold textAlign="center" mt={2.5}>
                 No Holding Tank Inserted.
               </Box>
             </Section>
@@ -48,7 +48,7 @@ const PumpSettings = (props) => {
     >
       <Stack>
         <Stack.Item color="label">Port Status:</Stack.Item>
-        <Stack.Item color={port_connected ? 'green' : 'average'} bold={1} ml={6}>
+        <Stack.Item color={port_connected ? 'green' : 'average'} bold ml={6}>
           {port_connected ? 'Connected' : 'Disconnected'}
         </Stack.Item>
       </Stack>

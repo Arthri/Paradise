@@ -24,15 +24,13 @@ const BrigCellsTableRow = (properties) => {
       <Table.Cell>{crimes}</Table.Cell>
       <Table.Cell>{brigged_by}</Table.Cell>
       <Table.Cell>
-        <TimeDisplay totalSeconds={time_set_seconds} />
+        <TimeDisplay value={time_set_seconds} />
       </Table.Cell>
       <Table.Cell>
-        <TimeDisplay totalSeconds={time_left_seconds} />
+        <TimeDisplay value={time_left_seconds} />
       </Table.Cell>
       <Table.Cell>
-        <Button type="button" onClick={release}>
-          Release
-        </Button>
+        <Button onClick={release}>Release</Button>
       </Table.Cell>
     </Table.Row>
   );

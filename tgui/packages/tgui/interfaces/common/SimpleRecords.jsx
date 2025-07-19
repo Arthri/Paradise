@@ -59,7 +59,7 @@ const RecordView = (props) => {
   switch (props.recordType) {
     case 'MED':
       secondaryRecord = (
-        <Section level={2} title="Medical Data">
+        <Section title="Medical Data">
           {medical ? (
             <LabeledList>
               <LabeledList.Item label="Blood Type">{medical.blood_type}</LabeledList.Item>
@@ -85,7 +85,7 @@ const RecordView = (props) => {
       break;
     case 'SEC':
       secondaryRecord = (
-        <Section level={2} title="Security Data">
+        <Section title="Security Data">
           {security ? (
             <LabeledList>
               <LabeledList.Item label="Criminal Status">{security.criminal}</LabeledList.Item>

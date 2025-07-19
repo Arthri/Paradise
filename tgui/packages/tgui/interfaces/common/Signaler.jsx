@@ -11,7 +11,7 @@ export const Signaler = (props) => {
       <LabeledList>
         <LabeledList.Item label="Frequency">
           <NumberInput
-            animate
+            animated
             step={0.2}
             stepPixelSize={6}
             minValue={minFrequency / 10}
@@ -28,7 +28,7 @@ export const Signaler = (props) => {
         </LabeledList.Item>
         <LabeledList.Item label="Code">
           <NumberInput
-            animate
+            animated
             step={1}
             stepPixelSize={6}
             minValue={1}

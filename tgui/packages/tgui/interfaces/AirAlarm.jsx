@@ -86,37 +86,37 @@ const AirStatus = (props) => {
           <LabeledList.Item label="Oxygen">
             <ProgressBar
               value={air.contents.oxygen / 100}
-              fractionDigits="1"
+              fractionDigits={1}
               color={Danger2Colour(air.danger.oxygen)}
             />
           </LabeledList.Item>
           <LabeledList.Item label="Nitrogen">
             <ProgressBar
               value={air.contents.nitrogen / 100}
-              fractionDigits="1"
+              fractionDigits={1}
               color={Danger2Colour(air.danger.nitrogen)}
             />
           </LabeledList.Item>
           <LabeledList.Item label="Carbon Dioxide">
-            <ProgressBar value={air.contents.co2 / 100} fractionDigits="1" color={Danger2Colour(air.danger.co2)} />
+            <ProgressBar value={air.contents.co2 / 100} fractionDigits={1} color={Danger2Colour(air.danger.co2)} />
           </LabeledList.Item>
           <LabeledList.Item label="Toxins">
             <ProgressBar
               value={air.contents.plasma / 100}
-              fractionDigits="1"
+              fractionDigits={1}
               color={Danger2Colour(air.danger.plasma)}
             />
           </LabeledList.Item>
           {air.contents.n2o > 0.1 && (
             <LabeledList.Item label="Nitrous Oxide">
-              <ProgressBar value={air.contents.n2o / 100} fractionDigits="1" color={Danger2Colour(air.danger.n2o)} />
+              <ProgressBar value={air.contents.n2o / 100} fractionDigits={1} color={Danger2Colour(air.danger.n2o)} />
             </LabeledList.Item>
           )}
           {air.contents.other > 0.1 && (
             <LabeledList.Item label="Other">
               <ProgressBar
                 value={air.contents.other / 100}
-                fractionDigits="1"
+                fractionDigits={1}
                 color={Danger2Colour(air.danger.other)}
               />
             </LabeledList.Item>

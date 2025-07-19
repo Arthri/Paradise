@@ -58,8 +58,8 @@ const StoredItems = (props) => {
         </LabeledList>
       ) : (
         <Stack fill>
-          <Stack.Item bold grow="1" textAlign="center" align="center" color="label">
-            <Icon name={locked ? 'lock' : 'exclamation-circle'} size="5" mb={3} />
+          <Stack.Item bold grow={1} textAlign="center" align="center" color="label">
+            <Icon name={locked ? 'lock' : 'exclamation-circle'} size={5} mb={3} />
             <br />
             {locked ? 'The unit is locked.' : 'The unit is closed.'}
           </Stack.Item>

@@ -155,7 +155,7 @@ const Transfer = (props) => {
           />
         </LabeledList.Item>
       </LabeledList>
-      <Section level={3} title="Requests">
+      <Section title="Requests">
         {requests.map((request) => (
           <Box key={request.UID} mt={1} ml={1}>
             <b>Request from {request.requester}</b>

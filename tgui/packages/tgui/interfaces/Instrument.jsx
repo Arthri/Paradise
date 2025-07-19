@@ -25,7 +25,7 @@ const InstrumentHelp = (properties) => {
   }
   return (
     <Modal maxWidth="75%" height={window.innerHeight * 0.75 + 'px'} mx="auto" py="0" px="0.5rem">
-      <Section height="100%" title="Help" level="2" overflow="auto">
+      <Section height="100%" title="Help" overflow="auto">
         <Box px="0.5rem" mt="-0.5rem">
           <h1>Making a Song</h1>
           <p>

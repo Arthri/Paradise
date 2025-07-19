@@ -96,8 +96,8 @@ export const CloningPod = (props) => {
           )}
           {!!currently_cloning && (
             <Stack height="100%">
-              <Stack.Item bold grow="1" textAlign="center" align="center" color="label">
-                <Icon name="lock" size="5" mb={3} />
+              <Stack.Item bold grow={1} textAlign="center" align="center" color="label">
+                <Icon name="lock" size={5} mb={3} />
                 <br />
                 Unable to access organ storage while cloning.
               </Stack.Item>

@@ -24,8 +24,8 @@ export const pai_bioscan = (props) => {
       </LabeledList.Item>
       <LabeledList.Item label="Health">
         <ProgressBar
-          min={0}
-          max={1}
+          minValue={0}
+          maxValue={1}
           value={health / 100}
           ranges={{
             good: [0.5, Infinity],

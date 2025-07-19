@@ -11,12 +11,12 @@ export const pda_games = (props) => {
       case 'Minesweeper':
         return (
           <Icon.Stack>
-            <Icon ml="0" mt="10px" name="flag" size="6" color="gray" rotation={30} />
-            <Icon ml="9px" mt="23px" name="bomb" size="3" color="black" />
+            <Icon ml="0" mt="10px" name="flag" size={6} color="gray" rotation={30} />
+            <Icon ml="9px" mt="23px" name="bomb" size={3} color="black" />
           </Icon.Stack>
         );
       default:
-        return <Icon ml="16px" mt="10px" name="gamepad" size="6" />;
+        return <Icon ml="16px" mt="10px" name="gamepad" size={6} />;
     }
   };
 

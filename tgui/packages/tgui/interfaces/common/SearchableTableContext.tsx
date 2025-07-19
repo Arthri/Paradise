@@ -8,7 +8,7 @@ const SearchableTableContext = Object.assign(
     }
   ),
   {
-    Default: (props: { children: React.JSX.Element }) => {
+    Default: (props: { children: React.ReactNode }) => {
       const [searchText, setSearchText] = useState('');
       return (
         <SearchableTableContext.Provider value={{ searchText, setSearchText }}>

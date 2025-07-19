@@ -8,7 +8,7 @@ const TabsContext = Object.assign(
     }
   ),
   {
-    Default: (props: { children: React.JSX.Element; tabIndex: number }) => {
+    Default: (props: { children: React.ReactNode; tabIndex: number }) => {
       const [tabIndex, setTabIndex] = useState(props.tabIndex);
       return <TabsContext.Provider value={{ tabIndex, setTabIndex }}>{props.children}</TabsContext.Provider>;
     },

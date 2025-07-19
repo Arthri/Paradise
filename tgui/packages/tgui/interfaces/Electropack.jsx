@@ -35,7 +35,7 @@ export const Electropack = (props) => {
               }
             >
               <NumberInput
-                animate
+                animated
                 unit="kHz"
                 step={0.2}
                 stepPixelSize={6}
@@ -66,7 +66,7 @@ export const Electropack = (props) => {
               }
             >
               <NumberInput
-                animate
+                animated
                 step={1}
                 stepPixelSize={6}
                 minValue={1}

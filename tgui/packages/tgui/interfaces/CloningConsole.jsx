@@ -56,7 +56,7 @@ const CloningConsoleMain = (props) => {
       {!pod_amount && <Box color="average">Notice: No pods connected.</Box>}
       {!!pod_amount &&
         pods.map((pod, i) => (
-          <Section key={pod} layer={2} title={'Pod ' + (i + 1)}>
+          <Section key={pod} title={'Pod ' + (i + 1)}>
             <Stack textAlign="center">
               <Stack.Item basis="96px" shrink={0}>
                 <img
@@ -127,7 +127,6 @@ const CloningConsoleDamage = (props) => {
       {!!has_scanner && (
         <Box>
           <Section
-            layer={2}
             title="Scanner Info"
             buttons={
               <Box>
@@ -151,7 +150,7 @@ const CloningConsoleDamage = (props) => {
             )}
             {(!!has_scanned || !!currently_scanning) && <Box color={feedback['color']}>{feedback['text']}</Box>}
           </Section>
-          <Section layer={2} title="Damages Breakdown">
+          <Section title="Damages Breakdown">
             <Box>
               {(!scan_successful || !has_scanned) && <Box color="average">No valid scan detected.</Box>}
               {!!scan_successful && !!has_scanned && (
@@ -182,7 +181,7 @@ const CloningConsoleDamage = (props) => {
                           ],
                           good: [0, selected_pod_data['biomass_storage_capacity'] / 3],
                         }}
-                        color={cloning_cost[0] > selected_pod_data['biomass'] ? 'bad' : null}
+                        color={cloning_cost[0] > selected_pod_data['biomass'] ? 'bad' : undefined}
                       >
                         Biomass: {cloning_cost[0]}/{selected_pod_data['biomass']}/
                         {selected_pod_data['biomass_storage_capacity']}

@@ -214,6 +214,7 @@
  */
 /datum/tgui/proc/get_payload(custom_data, with_data, with_static_data)
 	var/list/json_data = list()
+	// NOTE: UPDATING THIS REQUIRES UPDATING tgui/backend.ts
 	json_data["config"] = list(
 		"title" = title,
 		"status" = status,
