@@ -1,5 +1,5 @@
 import { filter, sortBy } from 'common/collections';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Button, Input, LabeledList, Section, Stack, Tabs } from 'tgui-core/components';
 import { flow } from 'tgui-core/fp';
 import { BooleanLike } from 'tgui-core/react';
@@ -27,9 +27,9 @@ type UplinkData = {
   exploitable: Exploitable[];
 };
 
-type Cart = UplinkItem[];
+type Cart = TUplinkItem[];
 
-type UplinkItem = {
+type TUplinkItem = {
   name: string;
   desc: string;
   cost: number;
@@ -61,7 +61,7 @@ type Exploitable = {
 
 type UplinkCategory = {
   cat: string;
-  items: UplinkItem[];
+  items: TUplinkItem[];
 };
 
 const PickTab = (index: number) => {
@@ -303,11 +303,12 @@ const Advert = (_properties) => {
 };
 
 type UplinkItemProps = {
-  i: number;
-  showDecription: BooleanLike;
+  i: TUplinkItem;
+  showDecription?: BooleanLike;
+  buttons?: React.ReactNode;
 };
 
-const UplinkItem = (props) => {
+const UplinkItem = (props: UplinkItemProps) => {
   const { i, showDecription = 1, buttons = <UplinkItemButtons i={i} /> } = props;
 
   return (
@@ -354,7 +355,7 @@ const UplinkItemButtons = (props) => {
 };
 
 type CartButtonProps = {
-  i: UplinkItem;
+  i: TUplinkItem;
 };
 
 const CartButtons = (props: CartButtonProps) => {
