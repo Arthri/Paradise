@@ -81,8 +81,8 @@ jobs:
           source ~/.nvm/nvm.sh
           nvm install "$NODE_VERSION"
           nvm alias default "$NODE_VERSION"
-          echo "NPM_CACHE_DIR=$(npm config get cache)" >> $GITHUB_OUTPUT
-          echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> $GITHUB_OUTPUT
+          echo "NPM_CACHE_DIR=$(npm config get cache)" >> "$GITHUB_OUTPUT"
+          echo "NPM_GLOBAL_CACHE_DIR=$(npm config get prefix)/node_modules/" >> "$GITHUB_OUTPUT"
       - name: Cache Dependencies
         uses: actions/cache@v4
         with:
@@ -94,6 +94,7 @@ jobs:
             ${{ steps.install-dependencies.outputs.NPM_GLOBAL_CACHE_DIR }}
 
       - name: Update Branch
+        id: update-branch
         if: ${{ inputs.merge-default-branch }}
         env:
           REPOSITORY: ${{ github.repository }}
@@ -112,6 +113,7 @@ jobs:
             exit 0
           else
             echo '- Merging default branch. HEAD branch is behind by '"$behind_by"' commits and ahead by '"$ahead_by"' commits.' | tee -a "$GITHUB_STEP_SUMMARY"
+            echo 'BRANCH_UPDATED=true' >> "$GITHUB_OUTPUT"
           fi
           git fetch origin "$HEAD_BRANCH" --depth=$((ahead_by + 1))
           git fetch 'https://github.com/'"$UPSTREAM"'.git' "$UPSTREAM_BRANCH" --depth=$((behind_by + 1)) && { git merge FETCH_HEAD || true ; }
@@ -125,26 +127,30 @@ jobs:
           fi
 
       - name: Build /tg/ui
+        id: build
         run: |
           source ~/.nvm/nvm.sh
           nvm use default
           (cd tgui && bin/tgui --mode=production && yarn run build:helpers && yarn run build:style)
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
-            echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
+            echo '- Skipping commit. No changes to commit after build.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
+            echo 'TGUI_BUILT=true' >> "$GITHUB_OUTPUT"
             git add --all
             git commit -m "Build and update /tg/ui"
           fi
 
       - name: Auto-Format
+        id: format
         if: ${{ inputs.format }}
         run: |
           source ~/.nvm/nvm.sh
           nvm use default
           (cd tgui && bin/tgui --prettier)
           if { git update-index --refresh && git diff-index --quiet HEAD -- ; } > /dev/null; then
-            echo '- Skipping commit. No changes to commit.' | tee -a "$GITHUB_STEP_SUMMARY"
+            echo '- Skipping commit. No changes to commit after format.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
+            echo 'TGUI_FORMATTED=true' >> "$GITHUB_OUTPUT"
             git add --all
             git commit -m "Reformat /tg/ui"
           fi
@@ -153,15 +159,29 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           TGUI_UPDATE_BRANCH: tgui/${{ env.HEAD_BRANCH }}
+          TGUI_BUILT: ${{ steps.build.outputs.TGUI_BUILT }}
+          TGUI_FORMATTED: ${{ steps.format.outputs.TGUI_FORMATTED }}
+          BRANCH_UPDATED: ${{ steps.update-branch.outputs.BRANCH_UPDATED }}
         run: |
           if [ -z "$(git rev-list -1 @{u}..)" ]; then
             echo '- Skipping push. No commits to push.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
             if $CREATE_PULL_REQUEST; then
               git push --force -u origin HEAD:$TGUI_UPDATE_BRANCH
-              gh pr create -t "Merge upstream into $HEAD_BRANCH" -b "" -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
+              operations=()
+              if [[ "$TGUI_BUILT" == 'true' ]]; then
+                operations+=('Build')
+              fi
+              if [[ "$TGUI_FORMATTED" == 'true' ]]; then
+                operations+=('Format')
+              fi
+              if [[ "$BRANCH_UPDATED" == 'true' ]]; then
+                operations+=('Update')
+              fi
+              operations[-1]='and '"${operations[-1]}"
+              printf -v 'operations_joined' '%s, ' "${operations[@]}"
+              gh pr create -t "${operations_joined%, } $HEAD_BRANCH" -b "" -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
             else
               git push
             fi
-            echo '- Built and/or formatted, committed, and pushed changes.' | tee -a "$GITHUB_STEP_SUMMARY"
           fi
