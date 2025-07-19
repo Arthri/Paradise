@@ -110,7 +110,7 @@ export class NanoMap extends Component {
 
     const mapUrl = config.map + '_nanomap_z1.png';
     const mapSize = MAP_SIZE * zoom + 'px';
-    const newStyle = {
+    const newStyle = /** @type {const} */ ({
       width: mapSize,
       height: mapSize,
       marginTop: offsetY * zoom + 'px',
@@ -124,8 +124,8 @@ export class NanoMap extends Component {
       backgroundRepeat: 'no-repeat',
       textAlign: 'center',
       cursor: dragging ? 'move' : 'auto',
-    };
-    const mapStyle = {
+    });
+    const mapStyle = /** @type {const} */ ({
       width: '100%',
       height: '100%',
       position: 'absolute',
@@ -133,7 +133,7 @@ export class NanoMap extends Component {
       left: '50%',
       transform: 'translate(-50%, -50%)',
       imageRendering: 'pixelated',
-    };
+    });
 
     return (
       <MapContext.Provider value={{ zoom }}>

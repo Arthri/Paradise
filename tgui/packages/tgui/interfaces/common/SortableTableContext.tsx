@@ -10,7 +10,7 @@ const SortableTableContext = Object.assign(
     }
   ),
   {
-    Default: (props: { children: React.JSX.Element; sortId: string; sortOrder?: boolean }) => {
+    Default: (props: { children: React.ReactNode; sortId: string; sortOrder?: boolean }) => {
       const [sortId, setSortId] = useState(props.sortId);
       const [sortOrder, setSortOrder] = useState(props.sortOrder ?? true);
       return (

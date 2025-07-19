@@ -12,7 +12,7 @@ type BeakerReagent = {
 type BeakerContentsProps = {
   beakerLoaded: BooleanLike;
   beakerContents: BeakerReagent[];
-  buttons: (chemical: BeakerReagent, idx: number) => React.JSX.Element;
+  buttons?: (chemical: BeakerReagent, idx: number) => React.JSX.Element;
 };
 
 /**
