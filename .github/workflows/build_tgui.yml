@@ -128,6 +128,8 @@ jobs:
 
       - name: Build /tg/ui
         id: build
+        env:
+          BRANCH_UPDATED: ${{ steps.update-branch.outputs.BRANCH_UPDATED }}
         run: |
           source ~/.nvm/nvm.sh
           nvm use default
@@ -136,8 +138,13 @@ jobs:
             echo '- Skipping commit. No changes to commit after build.' | tee -a "$GITHUB_STEP_SUMMARY"
           else
             echo 'TGUI_BUILT=true' >> "$GITHUB_OUTPUT"
+
             git add --all
-            git commit -m "Build and update /tg/ui"
+            message='Build /tg/ui'
+            if [[ "$BRANCH_UPDATED" == 'true' ]]; then
+              message='Build and update /tg/ui'
+            fi
+            git commit -m "$message"
           fi
 
       - name: Auto-Format
