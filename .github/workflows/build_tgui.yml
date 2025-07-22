@@ -159,7 +159,7 @@ jobs:
           else
             echo 'TGUI_FORMATTED=true' >> "$GITHUB_OUTPUT"
             git add --all
-            git commit -m "Reformat /tg/ui"
+            git commit -m "Format /tg/ui"
           fi
 
       - name: Push
