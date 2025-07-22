@@ -188,12 +188,12 @@ jobs:
               if [[ "${#operations[@]}" -gt 1 ]]; then
                 operations[-1]='and '"${operations[-1]}"
               fi
-              separator='%s '
+              separator=' '
               if [[ "${#operations[@]}" -gt 2 ]]; then
-                separator='%s, '
+                separator=', '
               fi
-              printf -v 'operations_joined' "$separator" "${operations[@]}"
-              gh pr create -t "${operations_joined%, } $HEAD_BRANCH" -b "" -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
+              printf -v 'operations_joined' "%s$separator" "${operations[@]}"
+              gh pr create -t "${operations_joined%$separator} $HEAD_BRANCH" -b "" -B $HEAD_BRANCH -H $TGUI_UPDATE_BRANCH
             else
               git push
             fi
